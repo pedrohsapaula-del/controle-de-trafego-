@@ -534,7 +534,7 @@
             border-radius: 12px;
             padding: 30px;
             width: 90%;
-            max-width: 800px;
+            max-width: 600px;
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 20px 40px rgba(139, 69, 19, 0.3);
@@ -896,7 +896,7 @@
                 </div>
                 <div class="menu-item" onclick="showPage('onibus', this)">
                     <i class="fas fa-bus-alt"></i>
-                    <span>Ônibus</span>
+                    <span>Veículos</span>
                 </div>
                 <div class="menu-item" onclick="showPage('rotas', this)">
                     <i class="fas fa-map-marked-alt"></i>
@@ -970,16 +970,13 @@
                 </div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar motorista por nome, CPF ou CNH..." onkeyup="filtrarMotoristas(this.value)">
+                    <input type="text" placeholder="Buscar motorista por nome..." onkeyup="filtrarMotoristas(this.value)">
                 </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th><i class="fas fa-user"></i> Nome</th>
-                                <th><i class="fas fa-id-card"></i> CPF</th>
-                                <th><i class="fas fa-address-card"></i> CNH</th>
-                                <th><i class="fas fa-star"></i> Categoria</th>
                                 <th><i class="fas fa-phone"></i> Telefone</th>
                                 <th><i class="fas fa-circle"></i> Status</th>
                                 <th><i class="fas fa-cogs"></i> Ações</th>
@@ -990,32 +987,28 @@
                 </div>
             </div>
 
-            <!-- Ônibus -->
+            <!-- Veículos -->
             <div class="page" id="onibus-page">
                 <div class="page-header">
                     <div class="page-header-left">
-                        <h1><i class="fas fa-bus-alt"></i> Ônibus</h1>
+                        <h1><i class="fas fa-bus-alt"></i> Veículos</h1>
                         <div class="header-subtitle">Frota de veículos</div>
                     </div>
                     <div class="page-header-right">
                         <button class="btn btn-primary" onclick="abrirFormOnibus()">
-                            <i class="fas fa-plus-circle"></i> Novo Ônibus
+                            <i class="fas fa-plus-circle"></i> Novo Veículo
                         </button>
                     </div>
                 </div>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar ônibus por placa, número ou modelo..." onkeyup="filtrarOnibus(this.value)">
+                    <input type="text" placeholder="Buscar veículo por nome..." onkeyup="filtrarOnibus(this.value)">
                 </div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th><i class="fas fa-tag"></i> Placa</th>
-                                <th><i class="fas fa-hashtag"></i> Nº</th>
-                                <th><i class="fas fa-bus"></i> Modelo</th>
-                                <th><i class="fas fa-users"></i> Capacidade</th>
-                                <th><i class="fas fa-shapes"></i> Tipo</th>
+                                <th><i class="fas fa-tag"></i> Nome</th>
                                 <th><i class="fas fa-circle"></i> Status</th>
                                 <th><i class="fas fa-cogs"></i> Ações</th>
                             </tr>
@@ -1029,8 +1022,8 @@
             <div class="page" id="rotas-page">
                 <div class="page-header">
                     <div class="page-header-left">
-                        <h1><i class="fas fa-map-marked-alt"></i> Rotas Monotrip</h1>
-                        <div class="header-subtitle">Gerenciamento de rotas e paradas</div>
+                        <h1><i class="fas fa-map-marked-alt"></i> Rotas</h1>
+                        <div class="header-subtitle">Gerenciamento de rotas</div>
                     </div>
                     <div class="page-header-right">
                         <button class="btn btn-primary" onclick="abrirFormRota()">
@@ -1042,12 +1035,9 @@
                     <table>
                         <thead>
                             <tr>
-                                <th><i class="fas fa-barcode"></i> Código</th>
                                 <th><i class="fas fa-map-pin"></i> Nome</th>
                                 <th><i class="fas fa-location-arrow"></i> Origem</th>
                                 <th><i class="fas fa-flag-checkered"></i> Destino</th>
-                                <th><i class="fas fa-ruler"></i> Distância</th>
-                                <th><i class="fas fa-stopwatch"></i> Tempo Est.</th>
                                 <th><i class="fas fa-cogs"></i> Ações</th>
                             </tr>
                         </thead>
@@ -1077,7 +1067,7 @@
                                 <th><i class="fas fa-sign-out-alt"></i> Saída</th>
                                 <th><i class="fas fa-sign-in-alt"></i> Chegada</th>
                                 <th><i class="fas fa-user"></i> Motorista</th>
-                                <th><i class="fas fa-bus"></i> Ônibus</th>
+                                <th><i class="fas fa-bus"></i> Veículo</th>
                                 <th><i class="fas fa-map"></i> Rota</th>
                                 <th><i class="fas fa-circle"></i> Status</th>
                                 <th><i class="fas fa-cogs"></i> Ações</th>
@@ -1112,9 +1102,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-bus"></i> Filtrar por Ônibus</label>
+                            <label><i class="fas fa-bus"></i> Filtrar por Veículo</label>
                             <select class="form-control" id="filtroOnibus" onchange="gerarPreviewWhatsApp()">
-                                <option value="">Todos os ônibus</option>
+                                <option value="">Todos os veículos</option>
                             </select>
                         </div>
                     </div>
@@ -1233,7 +1223,7 @@
                 <div class="stat-card">
                     <div class="stat-icon"><i class="fas fa-bus-alt"></i></div>
                     <div class="stat-info">
-                        <h3>Ônibus Disponíveis</h3>
+                        <h3>Veículos Disponíveis</h3>
                         <div class="number">${onibusDisponiveis}</div>
                     </div>
                 </div>
@@ -1284,14 +1274,13 @@
 
         // ============ COMPARTILHAR ============
         function carregarCompartilhar() {
-            // Preencher selects de filtro
             const selectMotorista = document.getElementById('filtroMotorista');
             selectMotorista.innerHTML = '<option value="">Todos os motoristas</option>' +
                 DB.motoristas.map(m => `<option value="${m.id}">${m.nome}</option>`).join('');
             
             const selectOnibus = document.getElementById('filtroOnibus');
-            selectOnibus.innerHTML = '<option value="">Todos os ônibus</option>' +
-                DB.onibus.map(o => `<option value="${o.id}">${o.placa} - ${o.modelo}</option>`).join('');
+            selectOnibus.innerHTML = '<option value="">Todos os veículos</option>' +
+                DB.onibus.map(o => `<option value="${o.id}">${o.nome}</option>`).join('');
             
             gerarPreviewWhatsApp();
         }
@@ -1305,7 +1294,6 @@
             mensagem += `📅 *Data:* ${new Date().toLocaleDateString('pt-BR')}\n`;
             mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
             
-            // Filtrar viagens
             let viagensFiltradas = DB.viagens;
             if (dataFiltro) {
                 viagensFiltradas = viagensFiltradas.filter(v => v.data === dataFiltro);
@@ -1317,15 +1305,13 @@
                 viagensFiltradas = viagensFiltradas.filter(v => v.onibusId === parseInt(onibusFiltro));
             }
             
-            // Resumo
             mensagem += `📊 *RESUMO GERAL*\n`;
             mensagem += `👥 Motoristas ativos: ${DB.motoristas.filter(m => m.status === 'ativo').length}\n`;
-            mensagem += `🚌 Ônibus disponíveis: ${DB.onibus.filter(o => o.status === 'disponivel').length}\n`;
+            mensagem += `🚌 Veículos disponíveis: ${DB.onibus.filter(o => o.status === 'disponivel').length}\n`;
             mensagem += `🗺️ Rotas cadastradas: ${DB.rotas.length}\n`;
             mensagem += `🕒 Viagens no período: ${viagensFiltradas.length}\n`;
             mensagem += `🔄 Trocas pendentes: ${DB.trocas.filter(t => t.status === 'pendente').length}\n\n`;
             
-            // Viagens
             if (viagensFiltradas.length > 0) {
                 mensagem += `━━━━━━━━━━━━━━━━━━\n`;
                 mensagem += `🕒 *VIAGENS*\n\n`;
@@ -1339,8 +1325,8 @@
                     mensagem += `📅 Data: ${formatarData(v.data)}\n`;
                     mensagem += `⏰ Horário: ${v.horarioSaida} → ${v.horarioChegada}\n`;
                     mensagem += `👤 Motorista: ${motorista ? motorista.nome : 'N/A'}\n`;
-                    mensagem += `🚌 Ônibus: ${onibus ? onibus.placa + ' - ' + onibus.modelo : 'N/A'}\n`;
-                    mensagem += `🗺️ Rota: ${rota ? rota.codigo + ' - ' + rota.nome : 'N/A'}\n`;
+                    mensagem += `🚌 Veículo: ${onibus ? onibus.nome : 'N/A'}\n`;
+                    mensagem += `🗺️ Rota: ${rota ? rota.nome : 'N/A'}\n`;
                     mensagem += `📌 Status: ${v.status}\n`;
                     if (v.observacoes) {
                         mensagem += `📝 Obs: ${v.observacoes}\n`;
@@ -1349,33 +1335,25 @@
                 });
             }
             
-            // Motoristas
             mensagem += `━━━━━━━━━━━━━━━━━━\n`;
             mensagem += `👥 *MOTORISTAS CADASTRADOS*\n\n`;
             DB.motoristas.forEach((m, index) => {
-                mensagem += `${index + 1}. ${m.nome} - ${m.categoria} - ${m.status}\n`;
-                mensagem += `   📞 ${m.telefone} | ✉️ ${m.email}\n\n`;
+                mensagem += `${index + 1}. ${m.nome} - ${m.status}\n`;
+                mensagem += `   📞 ${m.telefone}\n\n`;
             });
             
-            // Ônibus
             mensagem += `━━━━━━━━━━━━━━━━━━\n`;
-            mensagem += `🚌 *ÔNIBUS DA FROTA*\n\n`;
+            mensagem += `🚌 *VEÍCULOS DA FROTA*\n\n`;
             DB.onibus.forEach((o, index) => {
-                mensagem += `${index + 1}. ${o.placa} - ${o.modelo} (${o.capacidade} lugares)\n`;
-                mensagem += `   📌 Status: ${o.status} | Tipo: ${o.tipo}\n\n`;
+                mensagem += `${index + 1}. ${o.nome}\n`;
+                mensagem += `   📌 Status: ${o.status}\n\n`;
             });
             
-            // Rotas
             mensagem += `━━━━━━━━━━━━━━━━━━\n`;
             mensagem += `🗺️ *ROTAS DISPONÍVEIS*\n\n`;
             DB.rotas.forEach((r, index) => {
-                mensagem += `${index + 1}. ${r.codigo} - ${r.nome}\n`;
-                mensagem += `   📍 ${r.origem} → ${r.destino}\n`;
-                mensagem += `   📏 ${r.distancia} km | ⏱️ ${r.tempoEstimado} min\n`;
-                if (r.pontosParada) {
-                    mensagem += `   🅿️ Paradas: ${r.pontosParada}\n`;
-                }
-                mensagem += `\n`;
+                mensagem += `${index + 1}. ${r.nome}\n`;
+                mensagem += `   📍 ${r.origem} → ${r.destino}\n\n`;
             });
             
             mensagem += `━━━━━━━━━━━━━━━━━━\n`;
@@ -1426,15 +1404,12 @@
         function listarMotoristas() {
             const tbody = document.getElementById('motoristasTableBody');
             if (DB.motoristas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-user-tie"></i><p>Nenhum motorista cadastrado</p></div></td></tr>';
+                tbody.innerHTML = '<td><td colspan="4"><div class="empty-state"><i class="fas fa-user-tie"></i><p>Nenhum motorista cadastrado</p></div></td></tr>';
                 return;
             }
             tbody.innerHTML = DB.motoristas.map(m => `
                 <tr>
                     <td><strong>${m.nome}</strong></td>
-                    <td>${m.cpf}</td>
-                    <td>${m.cnh}</td>
-                    <td>${m.categoria}</td>
                     <td>${m.telefone}</td>
                     <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
                     <td>
@@ -1450,16 +1425,11 @@
         function filtrarMotoristas(termo) {
             const tbody = document.getElementById('motoristasTableBody');
             const filtrados = DB.motoristas.filter(m => 
-                m.nome.toLowerCase().includes(termo.toLowerCase()) ||
-                m.cpf.includes(termo) ||
-                m.cnh.includes(termo)
+                m.nome.toLowerCase().includes(termo.toLowerCase())
             );
             tbody.innerHTML = filtrados.map(m => `
                 <tr>
                     <td><strong>${m.nome}</strong></td>
-                    <td>${m.cpf}</td>
-                    <td>${m.cnh}</td>
-                    <td>${m.categoria}</td>
                     <td>${m.telefone}</td>
                     <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
                     <td>
@@ -1475,48 +1445,20 @@
         function abrirFormMotorista(id = null) {
             const motorista = id ? DB.motoristas.find(m => m.id === id) : null;
             const titulo = motorista ? 'Editar Motorista' : 'Novo Motorista';
-            const iconTitulo = motorista ? 'fa-user-edit' : 'fa-user-plus';
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas ${iconTitulo}"></i> ${titulo}</h2>
+                    <h2><i class="fas fa-user-plus"></i> ${titulo}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <form onsubmit="salvarMotorista(event, ${id})">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-user"></i> Nome Completo *</label>
-                            <input type="text" class="form-control" id="motoristaNome" value="${motorista ? motorista.nome : ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-id-card"></i> CPF *</label>
-                            <input type="text" class="form-control" id="motoristaCpf" value="${motorista ? motorista.cpf : ''}" required placeholder="000.000.000-00">
-                        </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nome Completo *</label>
+                        <input type="text" class="form-control" id="motoristaNome" value="${motorista ? motorista.nome : ''}" required>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-address-card"></i> CNH *</label>
-                            <input type="text" class="form-control" id="motoristaCnh" value="${motorista ? motorista.cnh : ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-star"></i> Categoria CNH *</label>
-                            <select class="form-control" id="motoristaCategoria">
-                                <option ${motorista && motorista.categoria === 'B' ? 'selected' : ''}>B</option>
-                                <option ${motorista && motorista.categoria === 'C' ? 'selected' : ''}>C</option>
-                                <option ${motorista && motorista.categoria === 'D' ? 'selected' : ''}>D</option>
-                                <option ${motorista && motorista.categoria === 'E' ? 'selected' : ''}>E</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-phone"></i> Telefone *</label>
-                            <input type="tel" class="form-control" id="motoristaTelefone" value="${motorista ? motorista.telefone : ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Email *</label>
-                            <input type="email" class="form-control" id="motoristaEmail" value="${motorista ? motorista.email : ''}" required>
-                        </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Telefone *</label>
+                        <input type="tel" class="form-control" id="motoristaTelefone" value="${motorista ? motorista.telefone : ''}" required>
                     </div>
                     <div class="form-group">
                         <label><i class="fas fa-circle"></i> Status</label>
@@ -1539,11 +1481,7 @@
             
             const dados = {
                 nome: document.getElementById('motoristaNome').value,
-                cpf: document.getElementById('motoristaCpf').value,
-                cnh: document.getElementById('motoristaCnh').value,
-                categoria: document.getElementById('motoristaCategoria').value,
                 telefone: document.getElementById('motoristaTelefone').value,
-                email: document.getElementById('motoristaEmail').value,
                 status: document.getElementById('motoristaStatus').value
             };
             
@@ -1569,20 +1507,16 @@
             }
         }
 
-        // ============ ÔNIBUS ============
+        // ============ VEÍCULOS ============
         function listarOnibus() {
             const tbody = document.getElementById('onibusTableBody');
             if (DB.onibus.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-bus-alt"></i><p>Nenhum ônibus cadastrado</p></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><i class="fas fa-bus-alt"></i><p>Nenhum veículo cadastrado</p></div></td></tr>';
                 return;
             }
             tbody.innerHTML = DB.onibus.map(o => `
                 <tr>
-                    <td><strong>${o.placa}</strong></td>
-                    <td>${o.numero}</td>
-                    <td>${o.modelo}</td>
-                    <td><i class="fas fa-users"></i> ${o.capacidade} lugares</td>
-                    <td>${o.tipo}</td>
+                    <td><strong>${o.nome}</strong></td>
                     <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
                     <td>
                         <div class="actions-cell">
@@ -1597,17 +1531,11 @@
         function filtrarOnibus(termo) {
             const tbody = document.getElementById('onibusTableBody');
             const filtrados = DB.onibus.filter(o =>
-                o.placa.toLowerCase().includes(termo.toLowerCase()) ||
-                o.numero.includes(termo) ||
-                o.modelo.toLowerCase().includes(termo.toLowerCase())
+                o.nome.toLowerCase().includes(termo.toLowerCase())
             );
             tbody.innerHTML = filtrados.map(o => `
                 <tr>
-                    <td><strong>${o.placa}</strong></td>
-                    <td>${o.numero}</td>
-                    <td>${o.modelo}</td>
-                    <td><i class="fas fa-users"></i> ${o.capacidade} lugares</td>
-                    <td>${o.tipo}</td>
+                    <td><strong>${o.nome}</strong></td>
                     <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
                     <td>
                         <div class="actions-cell">
@@ -1624,38 +1552,13 @@
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas ${onibus ? 'fa-bus' : 'fa-bus-alt'}"></i> ${onibus ? 'Editar' : 'Novo'} Ônibus</h2>
+                    <h2><i class="fas fa-bus-alt"></i> ${onibus ? 'Editar' : 'Novo'} Veículo</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <form onsubmit="salvarOnibus(event, ${id})">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-tag"></i> Placa *</label>
-                            <input type="text" class="form-control" id="onibusPlaca" value="${onibus ? onibus.placa : ''}" required placeholder="ABC-1234">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-hashtag"></i> Número *</label>
-                            <input type="text" class="form-control" id="onibusNumero" value="${onibus ? onibus.numero : ''}" required>
-                        </div>
-                    </div>
                     <div class="form-group">
-                        <label><i class="fas fa-bus"></i> Modelo *</label>
-                        <input type="text" class="form-control" id="onibusModelo" value="${onibus ? onibus.modelo : ''}" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-users"></i> Capacidade (lugares) *</label>
-                            <input type="number" class="form-control" id="onibusCapacidade" value="${onibus ? onibus.capacidade : ''}" required min="1">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-shapes"></i> Tipo *</label>
-                            <select class="form-control" id="onibusTipo">
-                                <option ${onibus && onibus.tipo === 'Convencional' ? 'selected' : ''}>Convencional</option>
-                                <option ${onibus && onibus.tipo === 'Articulado' ? 'selected' : ''}>Articulado</option>
-                                <option ${onibus && onibus.tipo === 'Micro' ? 'selected' : ''}>Micro</option>
-                                <option ${onibus && onibus.tipo === 'Double Decker' ? 'selected' : ''}>Double Decker</option>
-                            </select>
-                        </div>
+                        <label><i class="fas fa-tag"></i> Nome do Veículo *</label>
+                        <input type="text" class="form-control" id="onibusNome" value="${onibus ? onibus.nome : ''}" required placeholder="Ex: Ônibus 01, Micro-ônibus A">
                     </div>
                     ${id ? `
                         <div class="form-group">
@@ -1668,7 +1571,7 @@
                         </div>
                     ` : ''}
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
-                        <i class="fas fa-save"></i> Salvar Ônibus
+                        <i class="fas fa-save"></i> Salvar Veículo
                     </button>
                 </form>
             `;
@@ -1679,11 +1582,7 @@
             event.preventDefault();
             
             const dados = {
-                placa: document.getElementById('onibusPlaca').value,
-                numero: document.getElementById('onibusNumero').value,
-                modelo: document.getElementById('onibusModelo').value,
-                capacidade: parseInt(document.getElementById('onibusCapacidade').value),
-                tipo: document.getElementById('onibusTipo').value,
+                nome: document.getElementById('onibusNome').value,
                 status: id ? document.getElementById('onibusStatus').value : 'disponivel'
             };
             
@@ -1701,7 +1600,7 @@
         function editarOnibus(id) { abrirFormOnibus(id); }
 
         function excluirOnibus(id) {
-            if (confirm('Tem certeza que deseja excluir este ônibus?')) {
+            if (confirm('Tem certeza que deseja excluir este veículo?')) {
                 DB.onibus = DB.onibus.filter(o => o.id !== id);
                 listarOnibus();
             }
@@ -1711,17 +1610,14 @@
         function listarRotas() {
             const tbody = document.getElementById('rotasTableBody');
             if (DB.rotas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-map-marked-alt"></i><p>Nenhuma rota cadastrada</p></div></td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><i class="fas fa-map-marked-alt"></i><p>Nenhuma rota cadastrada</p></div></td></tr>';
                 return;
             }
             tbody.innerHTML = DB.rotas.map(r => `
                 <tr>
-                    <td><strong>${r.codigo}</strong></td>
-                    <td>${r.nome}</td>
+                    <td><strong>${r.nome}</strong></td>
                     <td>${r.origem}</td>
                     <td>${r.destino}</td>
-                    <td><i class="fas fa-ruler"></i> ${r.distancia} km</td>
-                    <td><i class="fas fa-clock"></i> ${r.tempoEstimado} min</td>
                     <td>
                         <div class="actions-cell">
                             <button class="btn btn-info btn-sm" onclick="verRota(${r.id})" title="Visualizar"><i class="fas fa-eye"></i></button>
@@ -1742,39 +1638,17 @@
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <form onsubmit="salvarRota(event, ${id})">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-barcode"></i> Código *</label>
-                            <input type="text" class="form-control" id="rotaCodigo" value="${rota ? rota.codigo : ''}" required placeholder="R001">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-map-pin"></i> Nome da Rota *</label>
-                            <input type="text" class="form-control" id="rotaNome" value="${rota ? rota.nome : ''}" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-location-arrow"></i> Origem *</label>
-                            <input type="text" class="form-control" id="rotaOrigem" value="${rota ? rota.origem : ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-flag-checkered"></i> Destino *</label>
-                            <input type="text" class="form-control" id="rotaDestino" value="${rota ? rota.destino : ''}" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-ruler"></i> Distância (km) *</label>
-                            <input type="number" step="0.1" class="form-control" id="rotaDistancia" value="${rota ? rota.distancia : ''}" required>
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-stopwatch"></i> Tempo Estimado (min) *</label>
-                            <input type="number" class="form-control" id="rotaTempo" value="${rota ? rota.tempoEstimado : ''}" required>
-                        </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-pin"></i> Nome da Rota *</label>
+                        <input type="text" class="form-control" id="rotaNome" value="${rota ? rota.nome : ''}" required>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-map-marker-alt"></i> Pontos de Parada</label>
-                        <input type="text" class="form-control" id="rotaPontos" value="${rota ? rota.pontosParada : ''}" placeholder="Separe por vírgula (Ex: Centro, Shopping, Hospital)">
+                        <label><i class="fas fa-location-arrow"></i> Origem *</label>
+                        <input type="text" class="form-control" id="rotaOrigem" value="${rota ? rota.origem : ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-flag-checkered"></i> Destino *</label>
+                        <input type="text" class="form-control" id="rotaDestino" value="${rota ? rota.destino : ''}" required>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
                         <i class="fas fa-save"></i> Salvar Rota
@@ -1788,13 +1662,9 @@
             event.preventDefault();
             
             const dados = {
-                codigo: document.getElementById('rotaCodigo').value,
                 nome: document.getElementById('rotaNome').value,
                 origem: document.getElementById('rotaOrigem').value,
-                destino: document.getElementById('rotaDestino').value,
-                distancia: parseFloat(document.getElementById('rotaDistancia').value),
-                tempoEstimado: parseInt(document.getElementById('rotaTempo').value),
-                pontosParada: document.getElementById('rotaPontos').value
+                destino: document.getElementById('rotaDestino').value
             };
             
             if (id) {
@@ -1814,22 +1684,14 @@
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas fa-map-marked-alt"></i> ${rota.codigo} - ${rota.nome}</h2>
+                    <h2><i class="fas fa-map-marked-alt"></i> ${rota.nome}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
                 <div>
                     <div class="info-box">
                         <p><i class="fas fa-location-arrow"></i> <strong>Origem:</strong> ${rota.origem}</p>
                         <p><i class="fas fa-flag-checkered"></i> <strong>Destino:</strong> ${rota.destino}</p>
-                        <p><i class="fas fa-ruler"></i> <strong>Distância:</strong> ${rota.distancia} km</p>
-                        <p><i class="fas fa-clock"></i> <strong>Tempo Estimado:</strong> ${rota.tempoEstimado} minutos</p>
                     </div>
-                    <h4 style="color:#8B4513;margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> Pontos de Parada:</h4>
-                    ${rota.pontosParada ? rota.pontosParada.split(',').map(p => `
-                        <div style="padding:10px;background:#fffdf5;margin:5px 0;border-radius:5px;display:flex;align-items:center;gap:10px;">
-                            <i class="fas fa-bus" style="color:#FFD700;"></i> ${p.trim()}
-                        </div>
-                    `).join('') : '<p>Nenhum ponto cadastrado</p>'}
                 </div>
             `;
             document.getElementById('modal').classList.add('active');
@@ -1862,8 +1724,8 @@
                         <td><i class="fas fa-sign-out-alt"></i> ${v.horarioSaida}</td>
                         <td><i class="fas fa-sign-in-alt"></i> ${v.horarioChegada}</td>
                         <td>${motorista ? motorista.nome : '<span style="color:#999;">N/A</span>'}</td>
-                        <td>${onibus ? onibus.placa : '<span style="color:#999;">N/A</span>'}</td>
-                        <td>${rota ? rota.codigo : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${onibus ? onibus.nome : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${rota ? rota.nome : '<span style="color:#999;">N/A</span>'}</td>
                         <td><span class="badge badge-${v.status === 'programada' ? 'info' : v.status === 'em_andamento' ? 'warning' : v.status === 'concluida' ? 'success' : 'danger'}"><i class="fas fa-circle"></i> ${v.status}</span></td>
                         <td>
                             <div class="actions-cell">
@@ -1906,23 +1768,23 @@
                             <label><i class="fas fa-user-tie"></i> Motorista *</label>
                             <select class="form-control" id="viagemMotorista" required>
                                 <option value="">Selecione um motorista</option>
-                                ${motoristasAtivos.map(m => `<option value="${m.id}" ${viagem && viagem.motoristaId === m.id ? 'selected' : ''}>${m.nome} - Cat. ${m.categoria}</option>`).join('')}
+                                ${motoristasAtivos.map(m => `<option value="${m.id}" ${viagem && viagem.motoristaId === m.id ? 'selected' : ''}>${m.nome}</option>`).join('')}
                             </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label><i class="fas fa-bus"></i> Ônibus *</label>
+                            <label><i class="fas fa-bus"></i> Veículo *</label>
                             <select class="form-control" id="viagemOnibus" required>
-                                <option value="">Selecione um ônibus</option>
-                                ${onibusDisponiveis.map(o => `<option value="${o.id}" ${viagem && viagem.onibusId === o.id ? 'selected' : ''}>${o.placa} - ${o.modelo}</option>`).join('')}
+                                <option value="">Selecione um veículo</option>
+                                ${onibusDisponiveis.map(o => `<option value="${o.id}" ${viagem && viagem.onibusId === o.id ? 'selected' : ''}>${o.nome}</option>`).join('')}
                             </select>
                         </div>
                         <div class="form-group">
                             <label><i class="fas fa-map"></i> Rota *</label>
                             <select class="form-control" id="viagemRota" required>
                                 <option value="">Selecione uma rota</option>
-                                ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.codigo} - ${r.nome}</option>`).join('')}
+                                ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.nome}</option>`).join('')}
                             </select>
                         </div>
                     </div>
@@ -2029,7 +1891,7 @@
                                             <p><i class="far fa-calendar-alt"></i> <strong>Data:</strong> ${formatarData(v.data)}</p>
                                             <p><i class="fas fa-clock"></i> <strong>Saída:</strong> ${v.horarioSaida} | <strong>Chegada:</strong> ${v.horarioChegada}</p>
                                             <p><i class="fas fa-user"></i> <strong>Motorista:</strong> ${motorista ? motorista.nome : 'N/A'}</p>
-                                            <p><i class="fas fa-bus"></i> <strong>Ônibus:</strong> ${onibus ? onibus.placa : 'N/A'}</p>
+                                            <p><i class="fas fa-bus"></i> <strong>Veículo:</strong> ${onibus ? onibus.nome : 'N/A'}</p>
                                             <p><i class="fas fa-map"></i> <strong>Rota:</strong> ${rota ? rota.nome : 'N/A'}</p>
                                         </div>
                                         <button class="btn btn-warning" onclick="abrirTroca(${v.id})" style="width:100%;margin-top:15px;">
@@ -2110,7 +1972,7 @@
                         <label><i class="fas fa-user-check"></i> Novo Motorista *</label>
                         <select class="form-control" id="trocaNovoMotorista" required>
                             <option value="">Selecione um motorista disponível</option>
-                            ${motoristasDisponiveis.map(m => `<option value="${m.id}">${m.nome} - Categoria ${m.categoria}</option>`).join('')}
+                            ${motoristasDisponiveis.map(m => `<option value="${m.id}">${m.nome}</option>`).join('')}
                         </select>
                     </div>
                     <div class="form-group">
