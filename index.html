@@ -6,1111 +6,38 @@
     <title>Itapemirim - Sistema de Gestão de Transportes</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f0;
-            color: #333;
-        }
-
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 260px;
-            background: #FFD700;
-            color: #8B4513;
-            padding: 0;
-            position: fixed;
-            height: 100vh;
-            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .sidebar-header {
-            background: #8B4513;
-            padding: 30px 20px;
-            text-align: center;
-            color: #FFD700;
-        }
-
-        .sidebar-header i {
-            font-size: 42px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .sidebar-header h2 {
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-header p {
-            font-size: 11px;
-            opacity: 0.9;
-            font-style: italic;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 15px 0;
-            background: #FFD700;
-            overflow-y: auto;
-        }
-
-        .menu-item {
-            padding: 14px 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #8B4513;
-            font-weight: 500;
-            border-left: 4px solid transparent;
-            margin: 1px 0;
-            font-size: 14px;
-        }
-
-        .menu-item i {
-            font-size: 18px;
-            width: 22px;
-            text-align: center;
-        }
-
-        .menu-item span {
-            flex: 1;
-        }
-
-        .menu-item:hover {
-            background: rgba(139, 69, 19, 0.1);
-            border-left-color: #8B4513;
-        }
-
-        .menu-item.active {
-            background: rgba(139, 69, 19, 0.15);
-            border-left-color: #8B4513;
-            font-weight: 700;
-        }
-
-        .menu-badge {
-            background: #8B4513;
-            color: #FFD700;
-            padding: 3px 9px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            min-width: 24px;
-            text-align: center;
-        }
-
-        .sidebar-footer {
-            padding: 20px;
-            background: rgba(139, 69, 19, 0.08);
-            text-align: center;
-            font-size: 11px;
-            color: #8B4513;
-            border-top: 2px solid rgba(139, 69, 19, 0.2);
-        }
-
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 30px;
-            min-height: 100vh;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .page-header {
-            background: white;
-            padding: 25px 30px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
-            border-left: 4px solid #FFD700;
-        }
-
-        .page-header-left h1 {
-            font-size: 24px;
-            color: #8B4513;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-header-left h1 i {
-            color: #FFD700;
-            font-size: 26px;
-        }
-
-        .header-subtitle {
-            color: #888;
-            font-size: 13px;
-            margin-top: 5px;
-            margin-left: 36px;
-        }
-
-        .page-header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .date-display {
-            color: #8B4513;
-            font-weight: 500;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .date-display i {
-            color: #FFD700;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 22px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 4px solid #FFD700;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(139, 69, 19, 0.15);
-        }
-
-        .stat-icon {
-            font-size: 36px;
-            color: #FFD700;
-            min-width: 50px;
-            text-align: center;
-        }
-
-        .stat-info h3 {
-            font-size: 12px;
-            color: #888;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .stat-info .number {
-            font-size: 28px;
-            font-weight: bold;
-            color: #8B4513;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            text-decoration: none;
-        }
-
-        .btn i {
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: #8B4513;
-            color: #FFD700;
-        }
-
-        .btn-primary:hover {
-            background: #A0522D;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
-        }
-
-        .btn-success {
-            background: #2E7D32;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #1B5E20;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.3);
-        }
-
-        .btn-warning {
-            background: #FFD700;
-            color: #8B4513;
-        }
-
-        .btn-warning:hover {
-            background: #FFC107;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-danger {
-            background: #C62828;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #B71C1C;
-            transform: translateY(-2px);
-        }
-
-        .btn-info {
-            background: #1565C0;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #0D47A1;
-            transform: translateY(-2px);
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #128C7E;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-        }
-
-        .btn-sm {
-            padding: 6px 10px;
-            font-size: 12px;
-            gap: 5px;
-        }
-
-        .btn-sm i {
-            font-size: 11px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #8B4513;
-            color: #FFD700;
-        }
-
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        th i {
-            margin-right: 5px;
-            font-size: 11px;
-        }
-
-        td {
-            padding: 13px 15px;
-            border-bottom: 1px solid #f0ebe3;
-            font-size: 13px;
-        }
-
-        tbody tr {
-            transition: background 0.2s;
-        }
-
-        tbody tr:hover {
-            background: #fffdf5;
-        }
-
-        .actions-cell {
-            display: flex;
-            gap: 5px;
-            justify-content: flex-start;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .badge {
-            padding: 5px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .badge i {
-            font-size: 10px;
-        }
-
-        .badge-success { background: #2E7D32; color: white; }
-        .badge-warning { background: #FFD700; color: #8B4513; }
-        .badge-danger { background: #C62828; color: white; }
-        .badge-info { background: #1565C0; color: white; }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #8B4513;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-group label i {
-            font-size: 14px;
-            width: 18px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 11px 14px;
-            border: 2px solid #e0d5c7;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.3s;
-            background: #fafaf7;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
-            background: white;
-        }
-
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        select.form-control {
-            cursor: pointer;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(139, 69, 19, 0.08);
-            border-bottom: 3px solid #FFD700;
-        }
-
-        .card-header {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #FFD700;
-            color: #8B4513;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-header i {
-            margin-right: 8px;
-            color: #FFD700;
-        }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(139, 69, 19, 0.6);
-            z-index: 1000;
-            backdrop-filter: blur(3px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(139, 69, 19, 0.3);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-30px) scale(0.95);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #FFD700;
-        }
-
-        .modal-header h2 {
-            color: #8B4513;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .modal-header h2 i {
-            color: #FFD700;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-            transition: all 0.3s;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .modal-close:hover {
-            color: #C62828;
-            background: #fce4e4;
-        }
-
-        .search-box {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 16px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 14px 20px 14px 45px;
-            border: 2px solid #e0d5c7;
-            border-radius: 25px;
-            font-size: 14px;
-            transition: all 0.3s;
-            background: white;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: #FFD700;
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #FFD700;
-        }
-
-        .tab {
-            padding: 12px 25px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-            margin-bottom: -3px;
-            transition: all 0.3s;
-            font-weight: 500;
-            color: #888;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tab i {
-            font-size: 14px;
-        }
-
-        .tab.active {
-            color: #8B4513;
-            font-weight: 700;
-            border-bottom-color: #8B4513;
-        }
-
-        .tab:hover {
-            color: #8B4513;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        .info-box {
-            background: #fffdf5;
-            border-left: 4px solid #FFD700;
-            padding: 18px;
-            border-radius: 5px;
-            margin-bottom: 25px;
-        }
-
-        .info-box p {
-            margin: 8px 0;
-            color: #8B4513;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .info-box p i {
-            color: #FFD700;
-            width: 20px;
-            text-align: center;
-        }
-
-        .whatsapp-preview {
-            background: #e7ffdb;
-            border: 2px solid #25D366;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .whatsapp-preview h3 {
-            color: #075e54;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .whatsapp-preview pre {
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            white-space: pre-wrap;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #333;
-            border: 1px solid #ddd;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .item-list {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0ebe3;
-        }
-
-        .item-list:last-child {
-            border-bottom: none;
-        }
-
-        .item-list p {
-            margin: 4px 0;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .item-list p i {
-            color: #FFD700;
-            width: 16px;
-            text-align: center;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            color: #FFD700;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .empty-state p {
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .separator {
-            border-top: 2px dashed #FFD700;
-            margin: 20px 0;
-        }
-
-        @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 60px;
-            }
-            
-            .sidebar-header {
-                padding: 20px 10px;
-            }
-            
-            .sidebar-header i {
-                font-size: 24px;
-            }
-            
-            .sidebar-header h2,
-            .sidebar-header p,
-            .menu-item span:not(.menu-badge),
-            .sidebar-footer {
-                display: none;
-            }
-            
-            .menu-item {
-                justify-content: center;
-                padding: 15px;
-                gap: 0;
-            }
-            
-            .menu-item i {
-                font-size: 20px;
-                margin: 0;
-            }
-            
-            .menu-badge {
-                display: none;
-            }
-            
-            .main-content {
-                margin-left: 60px;
-                padding: 15px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            
-            .stat-card {
-                padding: 15px;
-            }
-            
-            .stat-icon {
-                font-size: 28px;
-                min-width: 40px;
-            }
-            
-            .stat-info .number {
-                font-size: 22px;
-            }
-            
-            .grid-2, 
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .page-header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
-            
-            .page-header-left h1 {
-                font-size: 20px;
-            }
-            
-            .card-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-            }
-        }
+        /* ... (mantenha todo o CSS existente, está correto) ... */
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-bus"></i>
-                <h2>ITAPEMIRIM</h2>
-                <p>Gestão de Transportes</p>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="menu-item active" onclick="showPage('dashboard', this)">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="menu-item" onclick="showPage('motoristas', this)">
-                    <i class="fas fa-user-tie"></i>
-                    <span>Motoristas</span>
-                    <span class="menu-badge" id="motoristasCount">0</span>
-                </div>
-                <div class="menu-item" onclick="showPage('onibus', this)">
-                    <i class="fas fa-bus-alt"></i>
-                    <span>Veículos</span>
-                </div>
-                <div class="menu-item" onclick="showPage('rotas', this)">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>Rotas</span>
-                </div>
-                <div class="menu-item" onclick="showPage('viagens', this)">
-                    <i class="fas fa-calendar-check"></i>
-                    <span>Viagens</span>
-                </div>
-                <div class="menu-item" onclick="showPage('compartilhar', this)">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>Compartilhar</span>
-                </div>
-                <div class="menu-item" onclick="showPage('trocas', this)">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Trocas</span>
-                    <span class="menu-badge" id="trocasPendentes">0</span>
-                </div>
-            </nav>
-            <div class="sidebar-footer">
-                <i class="far fa-copyright"></i> 2024 Itapemirim<br>
-                Todos os direitos reservados
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <div class="page active" id="dashboard-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-chart-pie"></i> Dashboard</h1>
-                        <div class="header-subtitle">Visão geral do sistema</div>
-                    </div>
-                    <div class="page-header-right">
-                        <div class="date-display">
-                            <i class="far fa-calendar-alt"></i>
-                            <span id="currentDate"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="stats-grid" id="dashboardStats"></div>
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="card-header">
-                            <span><i class="fas fa-clock"></i> Últimas Viagens</span>
-                        </div>
-                        <div id="ultimasViagens"></div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <span><i class="fas fa-history"></i> Trocas Recentes</span>
-                        </div>
-                        <div id="trocasRecentes"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page" id="motoristas-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-user-tie"></i> Motoristas</h1>
-                        <div class="header-subtitle">Cadastro e gerenciamento de motoristas</div>
-                    </div>
-                    <div class="page-header-right">
-                        <button class="btn btn-primary" onclick="abrirFormMotorista()">
-                            <i class="fas fa-plus-circle"></i> Novo Motorista
-                        </button>
-                    </div>
-                </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar motorista por nome..." onkeyup="filtrarMotoristas(this.value)">
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-user"></i> Nome</th>
-                                <th><i class="fas fa-circle"></i> Status</th>
-                                <th><i class="fas fa-cogs"></i> Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="motoristasTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="page" id="onibus-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-bus-alt"></i> Veículos</h1>
-                        <div class="header-subtitle">Frota de veículos</div>
-                    </div>
-                    <div class="page-header-right">
-                        <button class="btn btn-primary" onclick="abrirFormOnibus()">
-                            <i class="fas fa-plus-circle"></i> Novo Veículo
-                        </button>
-                    </div>
-                </div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Buscar veículo por nome..." onkeyup="filtrarOnibus(this.value)">
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-tag"></i> Nome</th>
-                                <th><i class="fas fa-circle"></i> Status</th>
-                                <th><i class="fas fa-cogs"></i> Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="onibusTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="page" id="rotas-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-map-marked-alt"></i> Rotas</h1>
-                        <div class="header-subtitle">Gerenciamento de rotas</div>
-                    </div>
-                    <div class="page-header-right">
-                        <button class="btn btn-primary" onclick="abrirFormRota()">
-                            <i class="fas fa-plus-circle"></i> Nova Rota
-                        </button>
-                    </div>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><i class="fas fa-map-pin"></i> Nome</th>
-                                <th><i class="fas fa-location-arrow"></i> Origem</th>
-                                <th><i class="fas fa-flag-checkered"></i> Destino</th>
-                                <th><i class="fas fa-cogs"></i> Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rotasTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="page" id="viagens-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-calendar-check"></i> Viagens</h1>
-                        <div class="header-subtitle">Controle de horários e percursos</div>
-                    </div>
-                    <div class="page-header-right">
-                        <button class="btn btn-primary" onclick="abrirFormViagem()">
-                            <i class="fas fa-plus-circle"></i> Nova Viagem
-                        </button>
-                    </div>
-                </div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><i class="far fa-calendar-alt"></i> Data</th>
-                                <th><i class="fas fa-sign-out-alt"></i> Saída</th>
-                                <th><i class="fas fa-user"></i> Motorista</th>
-                                <th><i class="fas fa-bus"></i> Veículo</th>
-                                <th><i class="fas fa-map"></i> Rota</th>
-                                <th><i class="fas fa-circle"></i> Status</th>
-                                <th><i class="fas fa-cogs"></i> Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="viagensTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="page" id="compartilhar-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fab fa-whatsapp"></i> Compartilhar Informações</h1>
-                        <div class="header-subtitle">Gerar relatório de viagens e enviar via WhatsApp</div>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-header">
-                        <span><i class="fas fa-file-alt"></i> Relatório de Viagens</span>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label><i class="fas fa-filter"></i> Filtrar por Data</label>
-                            <input type="date" class="form-control" id="filtroData" onchange="gerarPreviewWhatsApp()">
-                        </div>
-                        <div class="form-group">
-                            <label><i class="fas fa-user"></i> Filtrar por Motorista</label>
-                            <select class="form-control" id="filtroMotorista" onchange="gerarPreviewWhatsApp()">
-                                <option value="">Todos os motoristas</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="separator"></div>
-                    
-                    <div class="whatsapp-preview" id="whatsappPreview">
-                        <h3><i class="fab fa-whatsapp"></i> Pré-visualização da Mensagem</h3>
-                        <pre id="mensagemPreview">Selecione os filtros para gerar o relatório...</pre>
-                    </div>
-                    
-                    <div class="btn-group" style="margin-top: 20px;">
-                        <button class="btn btn-whatsapp" onclick="enviarWhatsApp()">
-                            <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
-                        </button>
-                        <button class="btn btn-warning" onclick="editarMensagem()">
-                            <i class="fas fa-edit"></i> Editar Mensagem
-                        </button>
-                        <button class="btn btn-info" onclick="copiarMensagem()">
-                            <i class="fas fa-copy"></i> Copiar Texto
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page" id="trocas-page">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1><i class="fas fa-exchange-alt"></i> Trocas de Motorista</h1>
-                        <div class="header-subtitle">Gerenciamento de substituições</div>
-                    </div>
-                </div>
-                <div class="tabs">
-                    <div class="tab active" onclick="mostrarTabTrocas('ativas', this)">
-                        <i class="fas fa-play-circle"></i> Viagens Ativas
-                    </div>
-                    <div class="tab" onclick="mostrarTabTrocas('historico', this)">
-                        <i class="fas fa-history"></i> Histórico de Trocas
-                    </div>
-                </div>
-                <div id="trocasContent"></div>
-            </div>
-        </main>
-    </div>
-
-    <div class="modal" id="modal">
-        <div class="modal-content" id="modalContent"></div>
-    </div>
+    <!-- ... (mantenha toda a estrutura HTML existente) ... -->
 
     <script>
-        // BANCO DE DADOS COM DADOS INICIAIS
+        // ====== CONFIGURAÇÃO DE PERSISTÊNCIA ======
+        const STORAGE_KEY = 'itapemirim_db';
+        
+        // DADOS INICIAIS (apenas para primeira execução)
+        const dadosIniciais = {
+            motoristas: [
+                { id: 1, nome: "Carlos Alberto Silva", status: "ativo" },
+                { id: 2, nome: "Marcos Roberto Santos", status: "ativo" },
+                { id: 3, nome: "José Eduardo Lima", status: "ferias" }
+            ],
+            onibus: [
+                { id: 1, nome: "Ônibus 001 - Mercedes", status: "disponivel" },
+                { id: 2, nome: "Ônibus 002 - Scania", status: "em_rota" },
+                { id: 3, nome: "Micro-ônibus 003 - Volkswagen", status: "disponivel" }
+            ],
+            rotas: [
+                { id: 1, nome: "Linha Centro - Norte", origem: "Centro", destino: "Bairro Norte" },
+                { id: 2, nome: "Linha Sul - Shopping", origem: "Bairro Sul", destino: "Shopping Center" },
+                { id: 3, nome: "Linha Expresso Aeroporto", origem: "Rodoviária", destino: "Aeroporto" }
+            ],
+            viagens: [],
+            trocas: []
+        };
+
+        // Variáveis globais do banco de dados
         let DB = {
             motoristas: [],
             onibus: [],
@@ -1120,260 +47,424 @@
         };
 
         let nextId = {
-            motorista: 4,
-            onibus: 4,
-            rota: 4,
-            viagem: 4,
-            troca: 2
+            motorista: 1,
+            onibus: 1,
+            rota: 1,
+            viagem: 1,
+            troca: 1
         };
 
         let mensagemEditavel = '';
 
-        // DADOS INICIAIS
-        const dadosIniciaisMotoristas = [
-            { id: 1, nome: "Carlos Alberto Silva", status: "ativo" },
-            { id: 2, nome: "Marcos Roberto Santos", status: "ativo" },
-            { id: 3, nome: "José Eduardo Lima", status: "ferias" }
-        ];
-
-        const dadosIniciaisOnibus = [
-            { id: 1, nome: "Ônibus 001 - Mercedes", status: "disponivel" },
-            { id: 2, nome: "Ônibus 002 - Scania", status: "em_rota" },
-            { id: 3, nome: "Micro-ônibus 003 - Volkswagen", status: "disponivel" }
-        ];
-
-        const dadosIniciaisRotas = [
-            { id: 1, nome: "Linha Centro - Norte", origem: "Centro", destino: "Bairro Norte" },
-            { id: 2, nome: "Linha Sul - Shopping", origem: "Bairro Sul", destino: "Shopping Center" },
-            { id: 3, nome: "Linha Expresso Aeroporto", origem: "Rodoviária", destino: "Aeroporto" }
-        ];
-
-        const hoje = new Date().toISOString().split('T')[0];
-        const amanha = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        // ====== FUNÇÕES DE PERSISTÊNCIA ======
         
-        const dadosIniciaisViagens = [
-            { id: 1, motoristaId: 1, onibusId: 1, rotaId: 1, data: hoje, horarioSaida: "08:00", observacoes: "Viagem regular", status: "concluida" },
-            { id: 2, motoristaId: 2, onibusId: 2, rotaId: 2, data: hoje, horarioSaida: "10:30", observacoes: "", status: "em_andamento" },
-            { id: 3, motoristaId: 1, onibusId: 3, rotaId: 3, data: amanha, horarioSaida: "14:00", observacoes: "Viagem especial", status: "programada" }
-        ];
-
-        const dadosIniciaisTrocas = [
-            { id: 1, viagemId: 1, motoristaAnterior: 1, motoristaNovo: 2, data: "2024-01-15", hora: "09:30", motivo: "Motivo pessoal", status: "aprovada" }
-        ];
-
-        function carregarDadosIniciais() {
-            DB.motoristas = [...dadosIniciaisMotoristas];
-            DB.onibus = [...dadosIniciaisOnibus];
-            DB.rotas = [...dadosIniciaisRotas];
-            DB.viagens = [...dadosIniciaisViagens];
-            DB.trocas = [...dadosIniciaisTrocas];
+        // Salvar dados no localStorage
+        function salvarDados() {
+            const dadosParaSalvar = {
+                DB: DB,
+                nextId: nextId
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dadosParaSalvar));
         }
 
+        // Carregar dados do localStorage
+        function carregarDadosSalvos() {
+            const dadosSalvos = localStorage.getItem(STORAGE_KEY);
+            
+            if (dadosSalvos) {
+                // Carrega dados salvos
+                const dados = JSON.parse(dadosSalvos);
+                DB = dados.DB;
+                nextId = dados.nextId;
+                return true;
+            }
+            return false;
+        }
+
+        // Inicializar com dados padrão
+        function inicializarDadosPadrao() {
+            // Gera as datas atuais para as viagens
+            const hoje = new Date().toISOString().split('T')[0];
+            const amanha = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+            
+            // Copia os dados iniciais
+            DB.motoristas = [...dadosIniciais.motoristas];
+            DB.onibus = [...dadosIniciais.onibus];
+            DB.rotas = [...dadosIniciais.rotas];
+            
+            // Configura viagens iniciais com datas atuais
+            DB.viagens = [
+                { 
+                    id: 1, 
+                    motoristaId: 1, 
+                    onibusId: 1, 
+                    rotaId: 1, 
+                    data: hoje, 
+                    horarioSaida: "08:00", 
+                    observacoes: "Viagem regular", 
+                    status: "concluida" 
+                },
+                { 
+                    id: 2, 
+                    motoristaId: 2, 
+                    onibusId: 2, 
+                    rotaId: 2, 
+                    data: hoje, 
+                    horarioSaida: "10:30", 
+                    observacoes: "", 
+                    status: "em_andamento" 
+                },
+                { 
+                    id: 3, 
+                    motoristaId: 1, 
+                    onibusId: 3, 
+                    rotaId: 3, 
+                    data: amanha, 
+                    horarioSaida: "14:00", 
+                    observacoes: "Viagem especial", 
+                    status: "programada" 
+                }
+            ];
+            
+            DB.trocas = [
+                { 
+                    id: 1, 
+                    viagemId: 1, 
+                    motoristaAnterior: 1, 
+                    motoristaNovo: 2, 
+                    data: hoje, 
+                    hora: "09:30", 
+                    motivo: "Motivo pessoal", 
+                    status: "aprovada" 
+                }
+            ];
+            
+            // Configura os próximos IDs
+            nextId = {
+                motorista: 4,
+                onibus: 4,
+                rota: 4,
+                viagem: 4,
+                troca: 2
+            };
+            
+            // Salva os dados iniciais
+            salvarDados();
+        }
+
+        // ====== FUNÇÃO PRINCIPAL DE INICIALIZAÇÃO ======
+        function inicializarSistema() {
+            // Tenta carregar dados salvos
+            if (!carregarDadosSalvos()) {
+                // Se não houver dados salvos, inicializa com dados padrão
+                inicializarDadosPadrao();
+            }
+            
+            // Garante que as estruturas existam
+            if (!DB.motoristas) DB.motoristas = [];
+            if (!DB.onibus) DB.onibus = [];
+            if (!DB.rotas) DB.rotas = [];
+            if (!DB.viagens) DB.viagens = [];
+            if (!DB.trocas) DB.trocas = [];
+            
+            // Carrega o dashboard inicial
+            carregarDashboard();
+        }
+
+        // ====== FUNÇÕES DE NAVEGAÇÃO (MANTIDAS) ======
+        
         function showPage(pageName, element) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageName + '-page').classList.add('active');
-            
-            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
-            if (element) element.classList.add('active');
-            
-            atualizarPagina(pageName);
+            try {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                const pageElement = document.getElementById(pageName + '-page');
+                if (pageElement) {
+                    pageElement.classList.add('active');
+                }
+                
+                document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+                if (element) element.classList.add('active');
+                
+                atualizarPagina(pageName);
+            } catch (error) {
+                console.error('Erro ao mostrar página:', error);
+                alert('Erro ao carregar a página. Por favor, recarregue o sistema.');
+            }
         }
 
         function atualizarPagina(page) {
-            switch(page) {
-                case 'dashboard': carregarDashboard(); break;
-                case 'motoristas': listarMotoristas(); break;
-                case 'onibus': listarOnibus(); break;
-                case 'rotas': listarRotas(); break;
-                case 'viagens': listarViagens(); break;
-                case 'compartilhar': carregarCompartilhar(); break;
-                case 'trocas': carregarTrocas(); break;
+            try {
+                switch(page) {
+                    case 'dashboard': carregarDashboard(); break;
+                    case 'motoristas': listarMotoristas(); break;
+                    case 'onibus': listarOnibus(); break;
+                    case 'rotas': listarRotas(); break;
+                    case 'viagens': listarViagens(); break;
+                    case 'compartilhar': carregarCompartilhar(); break;
+                    case 'trocas': carregarTrocas(); break;
+                }
+            } catch (error) {
+                console.error(`Erro ao atualizar página ${page}:`, error);
             }
         }
 
+        // ====== FUNÇÕES DO DASHBOARD ======
+        
         function carregarDashboard() {
-            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo').length;
-            const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel').length;
-            const trocasPendentes = DB.trocas.filter(t => t.status === 'pendente').length;
-            
-            const statsHTML = `
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
-                    <div class="stat-info">
-                        <h3>Motoristas Ativos</h3>
-                        <div class="number">${motoristasAtivos}</div>
+            try {
+                document.getElementById('currentDate').textContent = new Date().toLocaleDateString('pt-BR', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                
+                const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo').length;
+                const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel').length;
+                const trocasPendentes = DB.trocas.filter(t => t.status === 'pendente').length;
+                
+                const statsHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-user-tie"></i></div>
+                        <div class="stat-info">
+                            <h3>Motoristas Ativos</h3>
+                            <div class="number">${motoristasAtivos}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-bus-alt"></i></div>
-                    <div class="stat-info">
-                        <h3>Veículos Disponíveis</h3>
-                        <div class="number">${onibusDisponiveis}</div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-bus-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Veículos Disponíveis</h3>
+                            <div class="number">${onibusDisponiveis}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <div class="stat-info">
-                        <h3>Rotas Cadastradas</h3>
-                        <div class="number">${DB.rotas.length}</div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-map-marked-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Rotas Cadastradas</h3>
+                            <div class="number">${DB.rotas.length}</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <div class="stat-info">
-                        <h3>Trocas Pendentes</h3>
-                        <div class="number">${trocasPendentes}</div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="stat-info">
+                            <h3>Trocas Pendentes</h3>
+                            <div class="number">${trocasPendentes}</div>
+                        </div>
                     </div>
-                </div>
-            `;
-            document.getElementById('dashboardStats').innerHTML = statsHTML;
-            
-            document.getElementById('ultimasViagens').innerHTML = DB.viagens.length === 0 
-                ? '<div class="empty-state"><i class="fas fa-bus"></i><p>Nenhuma viagem registrada</p></div>'
-                : DB.viagens.slice(-5).reverse().map(v => `
-                    <div class="item-list">
-                        <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(v.data)}</strong> - ${v.horarioSaida}</p>
-                        <p><i class="fas fa-user"></i> Motorista: ${getMotoristaNome(v.motoristaId)}</p>
-                        <p><span class="badge badge-info"><i class="fas fa-circle"></i> ${v.status}</span></p>
-                    </div>
-                `).join('');
-            
-            document.getElementById('trocasRecentes').innerHTML = DB.trocas.length === 0
-                ? '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div>'
-                : DB.trocas.slice(-5).reverse().map(t => `
-                    <div class="item-list">
-                        <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(t.data)}</strong></p>
-                        <p><i class="fas fa-exchange-alt"></i> ${getMotoristaNome(t.motoristaAnterior)} → ${getMotoristaNome(t.motoristaNovo)}</p>
-                        <p><span class="badge badge-${t.status === 'aprovada' ? 'success' : 'warning'}"><i class="fas fa-circle"></i> ${t.status}</span></p>
-                    </div>
-                `).join('');
-            
-            atualizarBadges();
+                `;
+                document.getElementById('dashboardStats').innerHTML = statsHTML;
+                
+                // Últimas viagens
+                const ultimasViagensDiv = document.getElementById('ultimasViagens');
+                if (DB.viagens.length === 0) {
+                    ultimasViagensDiv.innerHTML = '<div class="empty-state"><i class="fas fa-bus"></i><p>Nenhuma viagem registrada</p></div>';
+                } else {
+                    ultimasViagensDiv.innerHTML = DB.viagens.slice(-5).reverse().map(v => `
+                        <div class="item-list">
+                            <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(v.data)}</strong> - ${v.horarioSaida}</p>
+                            <p><i class="fas fa-user"></i> Motorista: ${getMotoristaNome(v.motoristaId)}</p>
+                            <p><span class="badge badge-info"><i class="fas fa-circle"></i> ${v.status}</span></p>
+                        </div>
+                    `).join('');
+                }
+                
+                // Trocas recentes
+                const trocasRecentesDiv = document.getElementById('trocasRecentes');
+                if (DB.trocas.length === 0) {
+                    trocasRecentesDiv.innerHTML = '<div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div>';
+                } else {
+                    trocasRecentesDiv.innerHTML = DB.trocas.slice(-5).reverse().map(t => `
+                        <div class="item-list">
+                            <p><i class="far fa-calendar-alt"></i> <strong>${formatarData(t.data)}</strong></p>
+                            <p><i class="fas fa-exchange-alt"></i> ${getMotoristaNome(t.motoristaAnterior)} → ${getMotoristaNome(t.motoristaNovo)}</p>
+                            <p><span class="badge badge-${t.status === 'aprovada' ? 'success' : 'warning'}"><i class="fas fa-circle"></i> ${t.status}</span></p>
+                        </div>
+                    `).join('');
+                }
+                
+                atualizarBadges();
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
         }
 
         function atualizarBadges() {
-            document.getElementById('motoristasCount').textContent = DB.motoristas.filter(m => m.status === 'ativo').length;
-            document.getElementById('trocasPendentes').textContent = DB.trocas.filter(t => t.status === 'pendente').length;
+            try {
+                const motoristasCount = document.getElementById('motoristasCount');
+                const trocasPendentes = document.getElementById('trocasPendentes');
+                
+                if (motoristasCount) {
+                    motoristasCount.textContent = DB.motoristas.filter(m => m.status === 'ativo').length;
+                }
+                if (trocasPendentes) {
+                    trocasPendentes.textContent = DB.trocas.filter(t => t.status === 'pendente').length;
+                }
+            } catch (error) {
+                console.error('Erro ao atualizar badges:', error);
+            }
         }
 
+        // ====== FUNÇÕES DE COMPARTILHAMENTO ======
+        
         function carregarCompartilhar() {
-            const selectMotorista = document.getElementById('filtroMotorista');
-            selectMotorista.innerHTML = '<option value="">Todos os motoristas</option>' +
-                DB.motoristas.map(m => `<option value="${m.id}">${m.nome}</option>`).join('');
-            
-            gerarPreviewWhatsApp();
+            try {
+                const selectMotorista = document.getElementById('filtroMotorista');
+                if (selectMotorista) {
+                    selectMotorista.innerHTML = '<option value="">Todos os motoristas</option>' +
+                        DB.motoristas.map(m => `<option value="${m.id}">${m.nome}</option>`).join('');
+                }
+                gerarPreviewWhatsApp();
+            } catch (error) {
+                console.error('Erro ao carregar compartilhamento:', error);
+            }
         }
 
         function gerarPreviewWhatsApp() {
-            const dataFiltro = document.getElementById('filtroData')?.value || '';
-            const motoristaFiltro = document.getElementById('filtroMotorista')?.value || '';
-            
-            let mensagem = `🚌 *ITAPEMIRIM - Relatório de Viagens*\n`;
-            mensagem += `📅 *Data do relatório:* ${new Date().toLocaleDateString('pt-BR')}\n`;
-            mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
-            
-            let viagensFiltradas = DB.viagens;
-            if (dataFiltro) {
-                viagensFiltradas = viagensFiltradas.filter(v => v.data === dataFiltro);
-            }
-            if (motoristaFiltro) {
-                viagensFiltradas = viagensFiltradas.filter(v => v.motoristaId === parseInt(motoristaFiltro));
-            }
-            
-            mensagem += `📊 *TOTAL DE VIAGENS: ${viagensFiltradas.length}*\n`;
-            mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
-            
-            if (viagensFiltradas.length > 0) {
-                mensagem += `🕒 *DETALHES DAS VIAGENS*\n\n`;
+            try {
+                const dataFiltro = document.getElementById('filtroData')?.value || '';
+                const motoristaFiltro = document.getElementById('filtroMotorista')?.value || '';
                 
-                viagensFiltradas.forEach((v, index) => {
-                    const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
-                    const onibus = DB.onibus.find(o => o.id === v.onibusId);
-                    const rota = DB.rotas.find(r => r.id === v.rotaId);
+                let mensagem = `🚌 *ITAPEMIRIM - Relatório de Viagens*\n`;
+                mensagem += `📅 *Data do relatório:* ${new Date().toLocaleDateString('pt-BR')}\n`;
+                mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
+                
+                let viagensFiltradas = [...DB.viagens];
+                if (dataFiltro) {
+                    viagensFiltradas = viagensFiltradas.filter(v => v.data === dataFiltro);
+                }
+                if (motoristaFiltro) {
+                    viagensFiltradas = viagensFiltradas.filter(v => v.motoristaId === parseInt(motoristaFiltro));
+                }
+                
+                mensagem += `📊 *TOTAL DE VIAGENS: ${viagensFiltradas.length}*\n`;
+                mensagem += `━━━━━━━━━━━━━━━━━━\n\n`;
+                
+                if (viagensFiltradas.length > 0) {
+                    mensagem += `🕒 *DETALHES DAS VIAGENS*\n\n`;
                     
-                    mensagem += `*${index + 1}ª VIAGEM*\n`;
-                    mensagem += `📅 Data: ${formatarData(v.data)}\n`;
-                    mensagem += `⏰ Horário de Saída: ${v.horarioSaida}\n`;
-                    mensagem += `👤 Motorista: ${motorista ? motorista.nome : 'N/A'}\n`;
-                    mensagem += `🚌 Veículo: ${onibus ? onibus.nome : 'N/A'}\n`;
-                    mensagem += `🗺️ Rota: ${rota ? rota.nome : 'N/A'}\n`;
-                    mensagem += `📍 Origem: ${rota ? rota.origem : 'N/A'}\n`;
-                    mensagem += `🏁 Destino: ${rota ? rota.destino : 'N/A'}\n`;
-                    mensagem += `📌 Status: ${v.status}\n`;
-                    if (v.observacoes) {
-                        mensagem += `📝 Obs: ${v.observacoes}\n`;
-                    }
-                    mensagem += `\n`;
-                });
-            } else {
-                mensagem += `Nenhuma viagem encontrada com os filtros selecionados.\n`;
+                    viagensFiltradas.forEach((v, index) => {
+                        const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                        const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                        const rota = DB.rotas.find(r => r.id === v.rotaId);
+                        
+                        mensagem += `*${index + 1}ª VIAGEM*\n`;
+                        mensagem += `📅 Data: ${formatarData(v.data)}\n`;
+                        mensagem += `⏰ Horário de Saída: ${v.horarioSaida}\n`;
+                        mensagem += `👤 Motorista: ${motorista ? motorista.nome : 'N/A'}\n`;
+                        mensagem += `🚌 Veículo: ${onibus ? onibus.nome : 'N/A'}\n`;
+                        mensagem += `🗺️ Rota: ${rota ? rota.nome : 'N/A'}\n`;
+                        mensagem += `📍 Origem: ${rota ? rota.origem : 'N/A'}\n`;
+                        mensagem += `🏁 Destino: ${rota ? rota.destino : 'N/A'}\n`;
+                        mensagem += `📌 Status: ${v.status}\n`;
+                        if (v.observacoes) {
+                            mensagem += `📝 Obs: ${v.observacoes}\n`;
+                        }
+                        mensagem += `\n`;
+                    });
+                } else {
+                    mensagem += `Nenhuma viagem encontrada com os filtros selecionados.\n`;
+                }
+                
+                mensagem += `━━━━━━━━━━━━━━━━━━\n`;
+                mensagem += `✅ *Relatório gerado automaticamente pelo Sistema Itapemirim*`;
+                
+                mensagemEditavel = mensagem;
+                const previewElement = document.getElementById('mensagemPreview');
+                if (previewElement) {
+                    previewElement.textContent = mensagem;
+                }
+            } catch (error) {
+                console.error('Erro ao gerar preview WhatsApp:', error);
             }
-            
-            mensagem += `━━━━━━━━━━━━━━━━━━\n`;
-            mensagem += `✅ *Relatório gerado automaticamente pelo Sistema Itapemirim*`;
-            
-            mensagemEditavel = mensagem;
-            document.getElementById('mensagemPreview').textContent = mensagem;
         }
 
         function editarMensagem() {
-            document.getElementById('modalContent').innerHTML = `
-                <div class="modal-header">
-                    <h2><i class="fas fa-edit"></i> Editar Mensagem</h2>
-                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-file-alt"></i> Edite o texto abaixo:</label>
-                    <textarea class="form-control" id="mensagemEdit" rows="20" style="font-family: monospace;">${mensagemEditavel}</textarea>
-                </div>
-                <button class="btn btn-success" onclick="salvarEdicaoMensagem()" style="width:100%;">
-                    <i class="fas fa-save"></i> Salvar e Visualizar
-                </button>
-            `;
-            document.getElementById('modal').classList.add('active');
+            try {
+                document.getElementById('modalContent').innerHTML = `
+                    <div class="modal-header">
+                        <h2><i class="fas fa-edit"></i> Editar Mensagem</h2>
+                        <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-file-alt"></i> Edite o texto abaixo:</label>
+                        <textarea class="form-control" id="mensagemEdit" rows="20" style="font-family: monospace;">${mensagemEditavel.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                    </div>
+                    <button class="btn btn-success" onclick="salvarEdicaoMensagem()" style="width:100%;">
+                        <i class="fas fa-save"></i> Salvar e Visualizar
+                    </button>
+                `;
+                document.getElementById('modal').classList.add('active');
+            } catch (error) {
+                console.error('Erro ao editar mensagem:', error);
+            }
         }
 
         function salvarEdicaoMensagem() {
-            mensagemEditavel = document.getElementById('mensagemEdit').value;
-            document.getElementById('mensagemPreview').textContent = mensagemEditavel;
-            fecharModal();
+            try {
+                const textarea = document.getElementById('mensagemEdit');
+                if (textarea) {
+                    mensagemEditavel = textarea.value;
+                    const previewElement = document.getElementById('mensagemPreview');
+                    if (previewElement) {
+                        previewElement.textContent = mensagemEditavel;
+                    }
+                }
+                fecharModal();
+            } catch (error) {
+                console.error('Erro ao salvar edição da mensagem:', error);
+            }
         }
 
         function copiarMensagem() {
-            navigator.clipboard.writeText(mensagemEditavel).then(() => {
-                alert('✅ Mensagem copiada para a área de transferência!');
-            }).catch(() => {
+            try {
+                navigator.clipboard.writeText(mensagemEditavel).then(() => {
+                    alert('✅ Mensagem copiada para a área de transferência!');
+                }).catch(() => {
+                    // Fallback para navegadores mais antigos
+                    const textarea = document.createElement('textarea');
+                    textarea.value = mensagemEditavel;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('✅ Mensagem copiada para a área de transferência!');
+                });
+            } catch (error) {
                 alert('❌ Erro ao copiar mensagem. Tente novamente.');
-            });
+                console.error('Erro ao copiar:', error);
+            }
         }
 
         function enviarWhatsApp() {
-            const textoCodificado = encodeURIComponent(mensagemEditavel);
-            const urlWhatsApp = `https://api.whatsapp.com/send?text=${textoCodificado}`;
-            window.open(urlWhatsApp, '_blank');
+            try {
+                const textoCodificado = encodeURIComponent(mensagemEditavel);
+                const urlWhatsApp = `https://api.whatsapp.com/send?text=${textoCodificado}`;
+                window.open(urlWhatsApp, '_blank');
+            } catch (error) {
+                alert('❌ Erro ao abrir WhatsApp. Tente novamente.');
+                console.error('Erro ao enviar WhatsApp:', error);
+            }
         }
 
+        // ====== CRUD MOTORISTAS ======
+        
         function listarMotoristas() {
             const tbody = document.getElementById('motoristasTableBody');
+            if (!tbody) return;
+            
             if (DB.motoristas.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><i class="fas fa-user-tie"></i><p>Nenhum motorista cadastrado</p></div></td></tr>';
                 return;
             }
+            
             tbody.innerHTML = DB.motoristas.map(m => `
                 <tr>
                     <td><strong>${m.nome}</strong></td>
                     <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
                     <td>
                         <div class="actions-cell">
-                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -1382,15 +473,25 @@
 
         function filtrarMotoristas(termo) {
             const tbody = document.getElementById('motoristasTableBody');
-            const filtrados = DB.motoristas.filter(m => m.nome.toLowerCase().includes(termo.toLowerCase()));
+            if (!tbody) return;
+            
+            const filtrados = DB.motoristas.filter(m => 
+                m.nome.toLowerCase().includes(termo.toLowerCase())
+            );
+            
+            if (filtrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><i class="fas fa-search"></i><p>Nenhum motorista encontrado</p></div></td></tr>';
+                return;
+            }
+            
             tbody.innerHTML = filtrados.map(m => `
                 <tr>
                     <td><strong>${m.nome}</strong></td>
                     <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
                     <td>
                         <div class="actions-cell">
-                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -1406,7 +507,7 @@
                     <h2><i class="fas fa-user-plus"></i> ${titulo}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <form onsubmit="salvarMotorista(event, ${id})">
+                <form onsubmit="salvarMotorista(event, ${id || 'null'})">
                     <div class="form-group">
                         <label><i class="fas fa-user"></i> Nome Completo *</label>
                         <input type="text" class="form-control" id="motoristaNome" value="${motorista ? motorista.nome : ''}" required>
@@ -1430,51 +531,95 @@
         function salvarMotorista(event, id) {
             event.preventDefault();
             
-            const dados = {
-                nome: document.getElementById('motoristaNome').value,
-                status: document.getElementById('motoristaStatus').value
-            };
-            
-            if (id) {
-                const index = DB.motoristas.findIndex(m => m.id === id);
-                DB.motoristas[index] = { ...DB.motoristas[index], ...dados };
-            } else {
-                DB.motoristas.push({ ...dados, id: nextId.motorista++ });
-            }
-            
-            fecharModal();
-            listarMotoristas();
-            atualizarBadges();
-            carregarDashboard();
-            gerarPreviewWhatsApp();
-        }
-
-        function editarMotorista(id) { abrirFormMotorista(id); }
-
-        function excluirMotorista(id) {
-            if (confirm('Tem certeza que deseja excluir este motorista?')) {
-                DB.motoristas = DB.motoristas.filter(m => m.id !== id);
+            try {
+                const nome = document.getElementById('motoristaNome').value.trim();
+                const status = document.getElementById('motoristaStatus').value;
+                
+                if (!nome) {
+                    alert('❌ Por favor, informe o nome do motorista.');
+                    return;
+                }
+                
+                if (id) {
+                    // Editar motorista existente
+                    const index = DB.motoristas.findIndex(m => m.id === id);
+                    if (index !== -1) {
+                        DB.motoristas[index].nome = nome;
+                        DB.motoristas[index].status = status;
+                    }
+                } else {
+                    // Criar novo motorista
+                    const novoMotorista = {
+                        id: nextId.motorista,
+                        nome: nome,
+                        status: status
+                    };
+                    DB.motoristas.push(novoMotorista);
+                    nextId.motorista++;
+                }
+                
+                // Salva no localStorage
+                salvarDados();
+                
+                fecharModal();
                 listarMotoristas();
                 atualizarBadges();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                
+                alert('✅ Motorista salvo com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar motorista:', error);
+                alert('❌ Erro ao salvar motorista. Tente novamente.');
             }
         }
 
+        function editarMotorista(id) { 
+            abrirFormMotorista(id); 
+        }
+
+        function excluirMotorista(id) {
+            const motorista = DB.motoristas.find(m => m.id === id);
+            if (!motorista) return;
+            
+            if (confirm(`Tem certeza que deseja excluir o motorista "${motorista.nome}"?`)) {
+                // Verifica se o motorista está em alguma viagem
+                const viagensComMotorista = DB.viagens.filter(v => v.motoristaId === id);
+                if (viagensComMotorista.length > 0) {
+                    if (!confirm(`Este motorista está em ${viagensComMotorista.length} viagem(ns). Deseja continuar mesmo assim?`)) {
+                        return;
+                    }
+                }
+                
+                DB.motoristas = DB.motoristas.filter(m => m.id !== id);
+                salvarDados();
+                listarMotoristas();
+                atualizarBadges();
+                carregarDashboard();
+                gerarPreviewWhatsApp();
+                alert('✅ Motorista excluído com sucesso!');
+            }
+        }
+
+        // ====== CRUD ÔNIBUS ======
+        
         function listarOnibus() {
             const tbody = document.getElementById('onibusTableBody');
+            if (!tbody) return;
+            
             if (DB.onibus.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><i class="fas fa-bus-alt"></i><p>Nenhum veículo cadastrado</p></div></td></tr>';
                 return;
             }
+            
             tbody.innerHTML = DB.onibus.map(o => `
                 <tr>
                     <td><strong>${o.nome}</strong></td>
-                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
+                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status.replace('_', ' ')}</span></td>
                     <td>
                         <div class="actions-cell">
-                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -1483,15 +628,25 @@
 
         function filtrarOnibus(termo) {
             const tbody = document.getElementById('onibusTableBody');
-            const filtrados = DB.onibus.filter(o => o.nome.toLowerCase().includes(termo.toLowerCase()));
+            if (!tbody) return;
+            
+            const filtrados = DB.onibus.filter(o => 
+                o.nome.toLowerCase().includes(termo.toLowerCase())
+            );
+            
+            if (filtrados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3"><div class="empty-state"><i class="fas fa-search"></i><p>Nenhum veículo encontrado</p></div></td></tr>';
+                return;
+            }
+            
             tbody.innerHTML = filtrados.map(o => `
                 <tr>
                     <td><strong>${o.nome}</strong></td>
-                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
+                    <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status.replace('_', ' ')}</span></td>
                     <td>
                         <div class="actions-cell">
-                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-warning btn-sm" onclick="editarOnibus(${o.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirOnibus(${o.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -1500,27 +655,26 @@
 
         function abrirFormOnibus(id = null) {
             const onibus = id ? DB.onibus.find(o => o.id === id) : null;
+            const titulo = onibus ? 'Editar Veículo' : 'Novo Veículo';
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas fa-bus-alt"></i> ${onibus ? 'Editar' : 'Novo'} Veículo</h2>
+                    <h2><i class="fas fa-bus-alt"></i> ${titulo}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <form onsubmit="salvarOnibus(event, ${id})">
+                <form onsubmit="salvarOnibus(event, ${id || 'null'})">
                     <div class="form-group">
                         <label><i class="fas fa-tag"></i> Nome do Veículo *</label>
                         <input type="text" class="form-control" id="onibusNome" value="${onibus ? onibus.nome : ''}" required>
                     </div>
-                    ${id ? `
-                        <div class="form-group">
-                            <label><i class="fas fa-circle"></i> Status</label>
-                            <select class="form-control" id="onibusStatus">
-                                <option value="disponivel" ${onibus.status === 'disponivel' ? 'selected' : ''}>✅ Disponível</option>
-                                <option value="em_rota" ${onibus.status === 'em_rota' ? 'selected' : ''}>🚌 Em Rota</option>
-                                <option value="manutencao" ${onibus.status === 'manutencao' ? 'selected' : ''}>🔧 Manutenção</option>
-                            </select>
-                        </div>
-                    ` : ''}
+                    <div class="form-group">
+                        <label><i class="fas fa-circle"></i> Status</label>
+                        <select class="form-control" id="onibusStatus">
+                            <option value="disponivel" ${onibus && onibus.status === 'disponivel' ? 'selected' : ''}>✅ Disponível</option>
+                            <option value="em_rota" ${onibus && onibus.status === 'em_rota' ? 'selected' : ''}>🚌 Em Rota</option>
+                            <option value="manutencao" ${onibus && onibus.status === 'manutencao' ? 'selected' : ''}>🔧 Manutenção</option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
                         <i class="fas fa-save"></i> Salvar Veículo
                     </button>
@@ -1532,41 +686,72 @@
         function salvarOnibus(event, id) {
             event.preventDefault();
             
-            const dados = {
-                nome: document.getElementById('onibusNome').value,
-                status: id ? document.getElementById('onibusStatus').value : 'disponivel'
-            };
-            
-            if (id) {
-                const index = DB.onibus.findIndex(o => o.id === id);
-                DB.onibus[index] = { ...DB.onibus[index], ...dados };
-            } else {
-                DB.onibus.push({ ...dados, id: nextId.onibus++ });
-            }
-            
-            fecharModal();
-            listarOnibus();
-            carregarDashboard();
-            gerarPreviewWhatsApp();
-        }
-
-        function editarOnibus(id) { abrirFormOnibus(id); }
-
-        function excluirOnibus(id) {
-            if (confirm('Tem certeza que deseja excluir este veículo?')) {
-                DB.onibus = DB.onibus.filter(o => o.id !== id);
+            try {
+                const nome = document.getElementById('onibusNome').value.trim();
+                const status = document.getElementById('onibusStatus').value;
+                
+                if (!nome) {
+                    alert('❌ Por favor, informe o nome do veículo.');
+                    return;
+                }
+                
+                if (id) {
+                    const index = DB.onibus.findIndex(o => o.id === id);
+                    if (index !== -1) {
+                        DB.onibus[index].nome = nome;
+                        DB.onibus[index].status = status;
+                    }
+                } else {
+                    const novoOnibus = {
+                        id: nextId.onibus,
+                        nome: nome,
+                        status: status || 'disponivel'
+                    };
+                    DB.onibus.push(novoOnibus);
+                    nextId.onibus++;
+                }
+                
+                salvarDados();
+                fecharModal();
                 listarOnibus();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                alert('✅ Veículo salvo com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar veículo:', error);
+                alert('❌ Erro ao salvar veículo. Tente novamente.');
             }
         }
 
+        function editarOnibus(id) { 
+            abrirFormOnibus(id); 
+        }
+
+        function excluirOnibus(id) {
+            const onibus = DB.onibus.find(o => o.id === id);
+            if (!onibus) return;
+            
+            if (confirm(`Tem certeza que deseja excluir o veículo "${onibus.nome}"?`)) {
+                DB.onibus = DB.onibus.filter(o => o.id !== id);
+                salvarDados();
+                listarOnibus();
+                carregarDashboard();
+                gerarPreviewWhatsApp();
+                alert('✅ Veículo excluído com sucesso!');
+            }
+        }
+
+        // ====== CRUD ROTAS ======
+        
         function listarRotas() {
             const tbody = document.getElementById('rotasTableBody');
+            if (!tbody) return;
+            
             if (DB.rotas.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4"><div class="empty-state"><i class="fas fa-map-marked-alt"></i><p>Nenhuma rota cadastrada</p></div></td></tr>';
                 return;
             }
+            
             tbody.innerHTML = DB.rotas.map(r => `
                 <tr>
                     <td><strong>${r.nome}</strong></td>
@@ -1574,9 +759,9 @@
                     <td>${r.destino}</td>
                     <td>
                         <div class="actions-cell">
-                            <button class="btn btn-info btn-sm" onclick="verRota(${r.id})"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-warning btn-sm" onclick="editarRota(${r.id})"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-danger btn-sm" onclick="excluirRota(${r.id})"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn btn-info btn-sm" onclick="verRota(${r.id})"><i class="fas fa-eye"></i> Ver</button>
+                            <button class="btn btn-warning btn-sm" onclick="editarRota(${r.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="excluirRota(${r.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -1585,13 +770,14 @@
 
         function abrirFormRota(id = null) {
             const rota = id ? DB.rotas.find(r => r.id === id) : null;
+            const titulo = rota ? 'Editar Rota' : 'Nova Rota';
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas fa-map-marked-alt"></i> ${rota ? 'Editar' : 'Nova'} Rota</h2>
+                    <h2><i class="fas fa-map-marked-alt"></i> ${titulo}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <form onsubmit="salvarRota(event, ${id})">
+                <form onsubmit="salvarRota(event, ${id || 'null'})">
                     <div class="form-group">
                         <label><i class="fas fa-map-pin"></i> Nome da Rota *</label>
                         <input type="text" class="form-control" id="rotaNome" value="${rota ? rota.nome : ''}" required>
@@ -1615,23 +801,44 @@
         function salvarRota(event, id) {
             event.preventDefault();
             
-            const dados = {
-                nome: document.getElementById('rotaNome').value,
-                origem: document.getElementById('rotaOrigem').value,
-                destino: document.getElementById('rotaDestino').value
-            };
-            
-            if (id) {
-                const index = DB.rotas.findIndex(r => r.id === id);
-                DB.rotas[index] = { ...DB.rotas[index], ...dados };
-            } else {
-                DB.rotas.push({ ...dados, id: nextId.rota++ });
+            try {
+                const nome = document.getElementById('rotaNome').value.trim();
+                const origem = document.getElementById('rotaOrigem').value.trim();
+                const destino = document.getElementById('rotaDestino').value.trim();
+                
+                if (!nome || !origem || !destino) {
+                    alert('❌ Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                
+                if (id) {
+                    const index = DB.rotas.findIndex(r => r.id === id);
+                    if (index !== -1) {
+                        DB.rotas[index].nome = nome;
+                        DB.rotas[index].origem = origem;
+                        DB.rotas[index].destino = destino;
+                    }
+                } else {
+                    const novaRota = {
+                        id: nextId.rota,
+                        nome: nome,
+                        origem: origem,
+                        destino: destino
+                    };
+                    DB.rotas.push(novaRota);
+                    nextId.rota++;
+                }
+                
+                salvarDados();
+                fecharModal();
+                listarRotas();
+                carregarDashboard();
+                gerarPreviewWhatsApp();
+                alert('✅ Rota salva com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar rota:', error);
+                alert('❌ Erro ao salvar rota. Tente novamente.');
             }
-            
-            fecharModal();
-            listarRotas();
-            carregarDashboard();
-            gerarPreviewWhatsApp();
         }
 
         function verRota(id) {
@@ -1648,45 +855,63 @@
                         <p><i class="fas fa-location-arrow"></i> <strong>Origem:</strong> ${rota.origem}</p>
                         <p><i class="fas fa-flag-checkered"></i> <strong>Destino:</strong> ${rota.destino}</p>
                     </div>
+                    <p><i class="fas fa-info-circle"></i> <strong>Nome completo:</strong> ${rota.nome}</p>
                 </div>
             `;
             document.getElementById('modal').classList.add('active');
         }
 
-        function editarRota(id) { abrirFormRota(id); }
+        function editarRota(id) { 
+            abrirFormRota(id); 
+        }
 
         function excluirRota(id) {
-            if (confirm('Tem certeza que deseja excluir esta rota?')) {
+            const rota = DB.rotas.find(r => r.id === id);
+            if (!rota) return;
+            
+            if (confirm(`Tem certeza que deseja excluir a rota "${rota.nome}"?`)) {
                 DB.rotas = DB.rotas.filter(r => r.id !== id);
+                salvarDados();
                 listarRotas();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                alert('✅ Rota excluída com sucesso!');
             }
         }
 
+        // ====== CRUD VIAGENS ======
+        
         function listarViagens() {
             const tbody = document.getElementById('viagensTableBody');
+            if (!tbody) return;
+            
             if (DB.viagens.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state"><i class="fas fa-calendar-check"></i><p>Nenhuma viagem cadastrada</p></div></td></tr>';
                 return;
             }
+            
             tbody.innerHTML = DB.viagens.map(v => {
                 const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
                 const onibus = DB.onibus.find(o => o.id === v.onibusId);
                 const rota = DB.rotas.find(r => r.id === v.rotaId);
                 
+                let statusClass = 'info';
+                if (v.status === 'concluida') statusClass = 'success';
+                else if (v.status === 'em_andamento') statusClass = 'warning';
+                else if (v.status === 'cancelada') statusClass = 'danger';
+                
                 return `
                     <tr>
                         <td><strong>${formatarData(v.data)}</strong></td>
                         <td><i class="fas fa-sign-out-alt"></i> ${v.horarioSaida}</td>
-                        <td>${motorista ? motorista.nome : 'N/A'}</td>
-                        <td>${onibus ? onibus.nome : 'N/A'}</td>
-                        <td>${rota ? rota.nome : 'N/A'}</td>
-                        <td><span class="badge badge-${v.status === 'programada' ? 'info' : v.status === 'em_andamento' ? 'warning' : v.status === 'concluida' ? 'success' : 'danger'}"><i class="fas fa-circle"></i> ${v.status}</span></td>
+                        <td>${motorista ? motorista.nome : '<span style="color:red;">N/A</span>'}</td>
+                        <td>${onibus ? onibus.nome : '<span style="color:red;">N/A</span>'}</td>
+                        <td>${rota ? rota.nome : '<span style="color:red;">N/A</span>'}</td>
+                        <td><span class="badge badge-${statusClass}"><i class="fas fa-circle"></i> ${v.status.replace('_', ' ')}</span></td>
                         <td>
                             <div class="actions-cell">
-                                <button class="btn btn-warning btn-sm" onclick="editarViagem(${v.id})"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm" onclick="excluirViagem(${v.id})"><i class="fas fa-trash-alt"></i></button>
+                                <button class="btn btn-warning btn-sm" onclick="editarViagem(${v.id})"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirViagem(${v.id})"><i class="fas fa-trash-alt"></i> Excluir</button>
                             </div>
                         </td>
                     </tr>
@@ -1696,15 +921,16 @@
 
         function abrirFormViagem(id = null) {
             const viagem = id ? DB.viagens.find(v => v.id === id) : null;
+            const titulo = viagem ? 'Editar Viagem' : 'Nova Viagem';
             const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo');
             const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel' || (viagem && o.id === viagem.onibusId));
             
             document.getElementById('modalContent').innerHTML = `
                 <div class="modal-header">
-                    <h2><i class="fas fa-calendar-plus"></i> ${viagem ? 'Editar' : 'Nova'} Viagem</h2>
+                    <h2><i class="fas fa-calendar-plus"></i> ${titulo}</h2>
                     <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
                 </div>
-                <form onsubmit="salvarViagem(event, ${id})">
+                <form onsubmit="salvarViagem(event, ${id || 'null'})">
                     <div class="form-row">
                         <div class="form-group">
                             <label><i class="far fa-calendar-alt"></i> Data *</label>
@@ -1721,6 +947,7 @@
                             <select class="form-control" id="viagemMotorista" required>
                                 <option value="">Selecione um motorista</option>
                                 ${motoristasAtivos.map(m => `<option value="${m.id}" ${viagem && viagem.motoristaId === m.id ? 'selected' : ''}>${m.nome}</option>`).join('')}
+                                ${motoristasAtivos.length === 0 ? '<option disabled>Nenhum motorista ativo disponível</option>' : ''}
                             </select>
                         </div>
                         <div class="form-group">
@@ -1728,6 +955,7 @@
                             <select class="form-control" id="viagemOnibus" required>
                                 <option value="">Selecione um veículo</option>
                                 ${onibusDisponiveis.map(o => `<option value="${o.id}" ${viagem && viagem.onibusId === o.id ? 'selected' : ''}>${o.nome}</option>`).join('')}
+                                ${onibusDisponiveis.length === 0 ? '<option disabled>Nenhum veículo disponível</option>' : ''}
                             </select>
                         </div>
                     </div>
@@ -1735,23 +963,22 @@
                         <label><i class="fas fa-map"></i> Rota *</label>
                         <select class="form-control" id="viagemRota" required>
                             <option value="">Selecione uma rota</option>
-                            ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.nome}</option>`).join('')}
+                            ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.nome} (${r.origem} → ${r.destino})</option>`).join('')}
+                            ${DB.rotas.length === 0 ? '<option disabled>Nenhuma rota cadastrada</option>' : ''}
                         </select>
                     </div>
-                    ${id ? `
-                        <div class="form-group">
-                            <label><i class="fas fa-circle"></i> Status</label>
-                            <select class="form-control" id="viagemStatus">
-                                <option value="programada" ${viagem.status === 'programada' ? 'selected' : ''}>📋 Programada</option>
-                                <option value="em_andamento" ${viagem.status === 'em_andamento' ? 'selected' : ''}>🚌 Em Andamento</option>
-                                <option value="concluida" ${viagem.status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
-                                <option value="cancelada" ${viagem.status === 'cancelada' ? 'selected' : ''}>❌ Cancelada</option>
-                            </select>
-                        </div>
-                    ` : ''}
+                    <div class="form-group">
+                        <label><i class="fas fa-circle"></i> Status</label>
+                        <select class="form-control" id="viagemStatus">
+                            <option value="programada" ${viagem && viagem.status === 'programada' ? 'selected' : ''}>📋 Programada</option>
+                            <option value="em_andamento" ${viagem && viagem.status === 'em_andamento' ? 'selected' : ''}>🚌 Em Andamento</option>
+                            <option value="concluida" ${viagem && viagem.status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
+                            <option value="cancelada" ${viagem && viagem.status === 'cancelada' ? 'selected' : ''}>❌ Cancelada</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label><i class="fas fa-sticky-note"></i> Observações</label>
-                        <textarea class="form-control" id="viagemObs" rows="3">${viagem ? viagem.observacoes : ''}</textarea>
+                        <textarea class="form-control" id="viagemObs" rows="3">${viagem ? viagem.observacoes || '' : ''}</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
                         <i class="fas fa-save"></i> Salvar Viagem
@@ -1764,63 +991,96 @@
         function salvarViagem(event, id) {
             event.preventDefault();
             
-            const motoristaId = parseInt(document.getElementById('viagemMotorista').value);
-            const onibusId = parseInt(document.getElementById('viagemOnibus').value);
-            const rotaId = parseInt(document.getElementById('viagemRota').value);
-            
-            if (!motoristaId || !onibusId || !rotaId) {
-                alert('Por favor, preencha todos os campos obrigatórios!');
-                return;
-            }
-            
-            const dados = {
-                motoristaId: motoristaId,
-                onibusId: onibusId,
-                rotaId: rotaId,
-                data: document.getElementById('viagemData').value,
-                horarioSaida: document.getElementById('viagemSaida').value,
-                observacoes: document.getElementById('viagemObs').value,
-                status: id ? document.getElementById('viagemStatus').value : 'programada'
-            };
-            
-            if (id) {
-                const index = DB.viagens.findIndex(v => v.id === id);
-                DB.viagens[index] = { ...DB.viagens[index], ...dados };
-            } else {
-                DB.viagens.push({ ...dados, id: nextId.viagem++ });
+            try {
+                const motoristaId = parseInt(document.getElementById('viagemMotorista').value);
+                const onibusId = parseInt(document.getElementById('viagemOnibus').value);
+                const rotaId = parseInt(document.getElementById('viagemRota').value);
+                const data = document.getElementById('viagemData').value;
+                const horarioSaida = document.getElementById('viagemSaida').value;
+                const observacoes = document.getElementById('viagemObs').value.trim();
+                const status = document.getElementById('viagemStatus').value;
                 
-                const onibus = DB.onibus.find(o => o.id === dados.onibusId);
-                if (onibus && onibus.status === 'disponivel') {
-                    onibus.status = 'em_rota';
+                if (!motoristaId || !onibusId || !rotaId || !data || !horarioSaida) {
+                    alert('❌ Por favor, preencha todos os campos obrigatórios!');
+                    return;
                 }
-            }
-            
-            fecharModal();
-            listarViagens();
-            carregarDashboard();
-            gerarPreviewWhatsApp();
-        }
-
-        function editarViagem(id) { abrirFormViagem(id); }
-
-        function excluirViagem(id) {
-            if (confirm('Tem certeza que deseja excluir esta viagem?')) {
-                DB.viagens = DB.viagens.filter(v => v.id !== id);
+                
+                if (id) {
+                    const index = DB.viagens.findIndex(v => v.id === id);
+                    if (index !== -1) {
+                        DB.viagens[index].motoristaId = motoristaId;
+                        DB.viagens[index].onibusId = onibusId;
+                        DB.viagens[index].rotaId = rotaId;
+                        DB.viagens[index].data = data;
+                        DB.viagens[index].horarioSaida = horarioSaida;
+                        DB.viagens[index].observacoes = observacoes;
+                        DB.viagens[index].status = status;
+                    }
+                } else {
+                    const novaViagem = {
+                        id: nextId.viagem,
+                        motoristaId: motoristaId,
+                        onibusId: onibusId,
+                        rotaId: rotaId,
+                        data: data,
+                        horarioSaida: horarioSaida,
+                        observacoes: observacoes,
+                        status: status
+                    };
+                    DB.viagens.push(novaViagem);
+                    nextId.viagem++;
+                    
+                    // Atualiza status do ônibus para "em rota" se a viagem não estiver cancelada
+                    if (status !== 'cancelada') {
+                        const onibus = DB.onibus.find(o => o.id === onibusId);
+                        if (onibus && onibus.status === 'disponivel') {
+                            onibus.status = 'em_rota';
+                        }
+                    }
+                }
+                
+                salvarDados();
+                fecharModal();
                 listarViagens();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                alert('✅ Viagem salva com sucesso!');
+            } catch (error) {
+                console.error('Erro ao salvar viagem:', error);
+                alert('❌ Erro ao salvar viagem. Tente novamente.');
             }
         }
 
+        function editarViagem(id) { 
+            abrirFormViagem(id); 
+        }
+
+        function excluirViagem(id) {
+            const viagem = DB.viagens.find(v => v.id === id);
+            if (!viagem) return;
+            
+            if (confirm('Tem certeza que deseja excluir esta viagem?')) {
+                DB.viagens = DB.viagens.filter(v => v.id !== id);
+                salvarDados();
+                listarViagens();
+                carregarDashboard();
+                gerarPreviewWhatsApp();
+                alert('✅ Viagem excluída com sucesso!');
+            }
+        }
+
+        // ====== FUNÇÕES DE TROCAS ======
+        
         function carregarTrocas() {
             mostrarTabTrocas('ativas', document.querySelector('#trocas-page .tab.active'));
         }
 
         function mostrarTabTrocas(tab, element) {
             document.querySelectorAll('#trocas-page .tab').forEach(t => t.classList.remove('active'));
-            element.classList.add('active');
+            if (element) element.classList.add('active');
             
             const content = document.getElementById('trocasContent');
+            if (!content) return;
             
             if (tab === 'ativas') {
                 const viagensAtivas = DB.viagens.filter(v => v.status === 'programada' || v.status === 'em_andamento');
@@ -1871,7 +1131,7 @@
                             </thead>
                             <tbody>
                                 ${DB.trocas.length === 0 
-                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div></tr></tr>'
+                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div></td></tr>'
                                     : DB.trocas.map(t => `
                                         <tr>
                                             <td><strong>${formatarData(t.data)}</strong> ${t.hora}</td>
@@ -1882,8 +1142,8 @@
                                             <td>
                                                 ${t.status === 'pendente' ? `
                                                     <div class="actions-cell">
-                                                        <button class="btn btn-success btn-sm" onclick="aprovarTroca(${t.id})"><i class="fas fa-check"></i></button>
-                                                        <button class="btn btn-danger btn-sm" onclick="rejeitarTroca(${t.id})"><i class="fas fa-times"></i></button>
+                                                        <button class="btn btn-success btn-sm" onclick="aprovarTroca(${t.id})"><i class="fas fa-check"></i> Aprovar</button>
+                                                        <button class="btn btn-danger btn-sm" onclick="rejeitarTroca(${t.id})"><i class="fas fa-times"></i> Rejeitar</button>
                                                     </div>
                                                 ` : '<span style="color:#999;">-</span>'}
                                             </td>
@@ -1899,7 +1159,10 @@
 
         function abrirTroca(viagemId) {
             const viagem = DB.viagens.find(v => v.id === viagemId);
-            if (!viagem) return;
+            if (!viagem) {
+                alert('Viagem não encontrada!');
+                return;
+            }
             
             const motoristaAtual = DB.motoristas.find(m => m.id === viagem.motoristaId);
             const motoristasDisponiveis = DB.motoristas.filter(m => m.status === 'ativo' && m.id !== viagem.motoristaId);
@@ -1942,41 +1205,63 @@
         function salvarTroca(event, viagemId) {
             event.preventDefault();
             
-            const viagem = DB.viagens.find(v => v.id === viagemId);
-            const novoMotoristaId = parseInt(document.getElementById('trocaNovoMotorista').value);
-            const motivo = document.getElementById('trocaMotivo').value;
-            
-            const troca = {
-                id: nextId.troca++,
-                viagemId: viagemId,
-                motoristaAnterior: viagem.motoristaId,
-                motoristaNovo: novoMotoristaId,
-                data: new Date().toISOString().split('T')[0],
-                hora: new Date().toLocaleTimeString(),
-                motivo: motivo,
-                status: 'pendente'
-            };
-            
-            DB.trocas.unshift(troca);
-            viagem.motoristaId = novoMotoristaId;
-            viagem.observacoes += `\n🔄 Troca de motorista: ${motivo}`;
-            
-            fecharModal();
-            carregarTrocas();
-            atualizarBadges();
-            carregarDashboard();
-            gerarPreviewWhatsApp();
-            alert('✅ Troca registrada com sucesso! Aguardando aprovação.');
+            try {
+                const viagem = DB.viagens.find(v => v.id === viagemId);
+                if (!viagem) {
+                    alert('Viagem não encontrada!');
+                    return;
+                }
+                
+                const novoMotoristaId = parseInt(document.getElementById('trocaNovoMotorista').value);
+                const motivo = document.getElementById('trocaMotivo').value.trim();
+                
+                if (!novoMotoristaId || !motivo) {
+                    alert('❌ Por favor, preencha todos os campos!');
+                    return;
+                }
+                
+                const troca = {
+                    id: nextId.troca,
+                    viagemId: viagemId,
+                    motoristaAnterior: viagem.motoristaId,
+                    motoristaNovo: novoMotoristaId,
+                    data: new Date().toISOString().split('T')[0],
+                    hora: new Date().toLocaleTimeString('pt-BR'),
+                    motivo: motivo,
+                    status: 'pendente'
+                };
+                
+                DB.trocas.unshift(troca);
+                nextId.troca++;
+                
+                // Atualiza o motorista na viagem
+                viagem.motoristaId = novoMotoristaId;
+                if (!viagem.observacoes) viagem.observacoes = '';
+                viagem.observacoes += `\n🔄 Troca de motorista em ${troca.data}: ${motivo}`;
+                
+                salvarDados();
+                fecharModal();
+                carregarTrocas();
+                atualizarBadges();
+                carregarDashboard();
+                gerarPreviewWhatsApp();
+                alert('✅ Troca registrada com sucesso! Aguardando aprovação.');
+            } catch (error) {
+                console.error('Erro ao salvar troca:', error);
+                alert('❌ Erro ao salvar troca. Tente novamente.');
+            }
         }
 
         function aprovarTroca(id) {
             const troca = DB.trocas.find(t => t.id === id);
             if (troca) {
                 troca.status = 'aprovada';
+                salvarDados();
                 carregarTrocas();
                 atualizarBadges();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                alert('✅ Troca aprovada com sucesso!');
             }
         }
 
@@ -1985,18 +1270,23 @@
             if (troca) {
                 troca.status = 'rejeitada';
                 
+                // Reverte o motorista na viagem
                 const viagem = DB.viagens.find(v => v.id === troca.viagemId);
                 if (viagem) {
                     viagem.motoristaId = troca.motoristaAnterior;
                 }
                 
+                salvarDados();
                 carregarTrocas();
                 atualizarBadges();
                 carregarDashboard();
                 gerarPreviewWhatsApp();
+                alert('❌ Troca rejeitada. Motorista original foi restaurado.');
             }
         }
 
+        // ====== FUNÇÕES AUXILIARES ======
+        
         function getMotoristaNome(id) {
             const motorista = DB.motoristas.find(m => m.id === id);
             return motorista ? motorista.nome : 'Desconhecido';
@@ -2012,14 +1302,37 @@
             document.getElementById('modal').classList.remove('active');
         }
 
+        // Fechar modal ao clicar fora
         window.onclick = function(event) {
             if (event.target === document.getElementById('modal')) {
                 fecharModal();
             }
         }
 
-        carregarDadosIniciais();
-        carregarDashboard();
+        // ====== INICIALIZAÇÃO DO SISTEMA ======
+        
+        // Função para resetar o sistema (útil para debug)
+        function resetarSistema() {
+            if (confirm('⚠️ ATENÇÃO: Isso apagará TODOS os dados e restaurará o sistema ao estado inicial. Deseja continuar?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                location.reload();
+            }
+        }
+
+        // Inicializa o sistema ao carregar a página
+        inicializarSistema();
+        
+        // Adiciona atalho de reset para debug (pressione Ctrl+Shift+R)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                e.preventDefault();
+                resetarSistema();
+            }
+        });
+        
+        console.log('✅ Sistema Itapemirim inicializado com sucesso!');
+        console.log('💾 Dados salvos em localStorage:', STORAGE_KEY);
+        console.log('🔄 Para resetar o sistema, pressione Ctrl+Shift+R');
     </script>
 </body>
 </html>
