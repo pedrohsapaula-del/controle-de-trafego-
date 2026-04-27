@@ -1139,7 +1139,7 @@
     </div>
 
     <script>
-        // ============ BANCO DE DADOS ============
+        // ============ BANCO DE DADOS COM DADOS INICIAIS ============
         let DB = {
             motoristas: [],
             onibus: [],
@@ -1149,14 +1149,59 @@
         };
 
         let nextId = {
-            motorista: 1,
-            onibus: 1,
-            rota: 1,
-            viagem: 1,
-            troca: 1
+            motorista: 4,
+            onibus: 4,
+            rota: 4,
+            viagem: 4,
+            troca: 2
         };
 
         let mensagemEditavel = '';
+
+        // DADOS INICIAIS - MOTORISTAS
+        const dadosIniciaisMotoristas = [
+            { id: 1, nome: "Carlos Alberto Silva", status: "ativo" },
+            { id: 2, nome: "Marcos Roberto Santos", status: "ativo" },
+            { id: 3, nome: "José Eduardo Lima", status: "ferias" }
+        ];
+
+        // DADOS INICIAIS - VEÍCULOS
+        const dadosIniciaisOnibus = [
+            { id: 1, nome: "Ônibus 001 - Mercedes", status: "disponivel" },
+            { id: 2, nome: "Ônibus 002 - Scania", status: "em_rota" },
+            { id: 3, nome: "Micro-ônibus 003 - Volkswagen", status: "disponivel" }
+        ];
+
+        // DADOS INICIAIS - ROTAS
+        const dadosIniciaisRotas = [
+            { id: 1, nome: "Linha Centro - Norte", origem: "Centro", destino: "Bairro Norte" },
+            { id: 2, nome: "Linha Sul - Shopping", origem: "Bairro Sul", destino: "Shopping Center" },
+            { id: 3, nome: "Linha Expresso Aeroporto", origem: "Rodoviária", destino: "Aeroporto" }
+        ];
+
+        // DADOS INICIAIS - VIAGENS
+        const hoje = new Date().toISOString().split('T')[0];
+        const amanha = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+        
+        const dadosIniciaisViagens = [
+            { id: 1, motoristaId: 1, onibusId: 1, rotaId: 1, data: hoje, horarioSaida: "08:00", observacoes: "Viagem regular", status: "concluida" },
+            { id: 2, motoristaId: 2, onibusId: 2, rotaId: 2, data: hoje, horarioSaida: "10:30", observacoes: "", status: "em_andamento" },
+            { id: 3, motoristaId: 1, onibusId: 3, rotaId: 3, data: amanha, horarioSaida: "14:00", observacoes: "Viagem especial", status: "programada" }
+        ];
+
+        // DADOS INICIAIS - TROCAS
+        const dadosIniciaisTrocas = [
+            { id: 1, viagemId: 1, motoristaAnterior: 1, motoristaNovo: 2, data: "2024-01-15", hora: "09:30", motivo: "Motivo pessoal", status: "aprovada" }
+        ];
+
+        // Função para carregar dados iniciais
+        function carregarDadosIniciais() {
+            DB.motoristas = [...dadosIniciaisMotoristas];
+            DB.onibus = [...dadosIniciaisOnibus];
+            DB.rotas = [...dadosIniciaisRotas];
+            DB.viagens = [...dadosIniciaisViagens];
+            DB.trocas = [...dadosIniciaisTrocas];
+        }
 
         // ============ FUNÇÕES DE NAVEGAÇÃO ============
         function showPage(pageName, element) {
@@ -1363,7 +1408,7 @@
                 <tr>
                     <td><strong>${m.nome}</strong></td>
                     <td><span class="badge badge-${m.status === 'ativo' ? 'success' : m.status === 'ferias' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${m.status}</span></td>
-                    <tr>
+                    <td>
                         <div class="actions-cell">
                             <button class="btn btn-warning btn-sm" onclick="editarMotorista(${m.id})" title="Editar"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-danger btn-sm" onclick="excluirMotorista(${m.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
@@ -1440,6 +1485,7 @@
             fecharModal();
             listarMotoristas();
             atualizarBadges();
+            carregarDashboard();
         }
 
         function editarMotorista(id) { abrirFormMotorista(id); }
@@ -1449,6 +1495,7 @@
                 DB.motoristas = DB.motoristas.filter(m => m.id !== id);
                 listarMotoristas();
                 atualizarBadges();
+                carregarDashboard();
             }
         }
 
@@ -1479,7 +1526,7 @@
                 o.nome.toLowerCase().includes(termo.toLowerCase())
             );
             tbody.innerHTML = filtrados.map(o => `
-                <tr>
+                </table>
                     <td><strong>${o.nome}</strong></td>
                     <td><span class="badge badge-${o.status === 'disponivel' ? 'success' : o.status === 'em_rota' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${o.status}</span></td>
                     <td>
@@ -1540,6 +1587,7 @@
             
             fecharModal();
             listarOnibus();
+            carregarDashboard();
         }
 
         function editarOnibus(id) { abrirFormOnibus(id); }
@@ -1548,6 +1596,7 @@
             if (confirm('Tem certeza que deseja excluir este veículo?')) {
                 DB.onibus = DB.onibus.filter(o => o.id !== id);
                 listarOnibus();
+                carregarDashboard();
             }
         }
 
@@ -1621,6 +1670,7 @@
             
             fecharModal();
             listarRotas();
+            carregarDashboard();
         }
 
         function verRota(id) {
@@ -1648,6 +1698,7 @@
             if (confirm('Tem certeza que deseja excluir esta rota?')) {
                 DB.rotas = DB.rotas.filter(r => r.id !== id);
                 listarRotas();
+                carregarDashboard();
             }
         }
 
@@ -1785,6 +1836,7 @@
             
             fecharModal();
             listarViagens();
+            carregarDashboard();
         }
 
         function editarViagem(id) { abrirFormViagem(id); }
@@ -1793,6 +1845,7 @@
             if (confirm('Tem certeza que deseja excluir esta viagem?')) {
                 DB.viagens = DB.viagens.filter(v => v.id !== id);
                 listarViagens();
+                carregarDashboard();
             }
         }
 
@@ -1856,7 +1909,7 @@
                             </thead>
                             <tbody>
                                 ${DB.trocas.length === 0 
-                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div><tr></tr>'
+                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div></tr></tr>'
                                     : DB.trocas.map(t => `
                                         <tr>
                                             <td><strong>${formatarData(t.data)}</strong> ${t.hora}</td>
@@ -1949,6 +2002,7 @@
             fecharModal();
             carregarTrocas();
             atualizarBadges();
+            carregarDashboard();
             alert('✅ Troca registrada com sucesso! Aguardando aprovação.');
         }
 
@@ -1958,6 +2012,7 @@
                 troca.status = 'aprovada';
                 carregarTrocas();
                 atualizarBadges();
+                carregarDashboard();
             }
         }
 
@@ -1973,6 +2028,7 @@
                 
                 carregarTrocas();
                 atualizarBadges();
+                carregarDashboard();
             }
         }
 
@@ -1999,6 +2055,7 @@
         }
 
         // ============ INICIALIZAÇÃO ============
+        carregarDadosIniciais();
         carregarDashboard();
     </script>
 </body>
