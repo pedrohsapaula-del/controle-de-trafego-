@@ -1743,4 +1743,464 @@
                 </div>
                 <form onsubmit="salvarRota(event, ${id})">
                     <div class="form-row">
-              
+                        <div class="form-group">
+                            <label><i class="fas fa-barcode"></i> Código *</label>
+                            <input type="text" class="form-control" id="rotaCodigo" value="${rota ? rota.codigo : ''}" required placeholder="R001">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-pin"></i> Nome da Rota *</label>
+                            <input type="text" class="form-control" id="rotaNome" value="${rota ? rota.nome : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-location-arrow"></i> Origem *</label>
+                            <input type="text" class="form-control" id="rotaOrigem" value="${rota ? rota.origem : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-flag-checkered"></i> Destino *</label>
+                            <input type="text" class="form-control" id="rotaDestino" value="${rota ? rota.destino : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-ruler"></i> Distância (km) *</label>
+                            <input type="number" step="0.1" class="form-control" id="rotaDistancia" value="${rota ? rota.distancia : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-stopwatch"></i> Tempo Estimado (min) *</label>
+                            <input type="number" class="form-control" id="rotaTempo" value="${rota ? rota.tempoEstimado : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Pontos de Parada</label>
+                        <input type="text" class="form-control" id="rotaPontos" value="${rota ? rota.pontosParada : ''}" placeholder="Separe por vírgula (Ex: Centro, Shopping, Hospital)">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Rota
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarRota(event, id) {
+            event.preventDefault();
+            
+            const dados = {
+                codigo: document.getElementById('rotaCodigo').value,
+                nome: document.getElementById('rotaNome').value,
+                origem: document.getElementById('rotaOrigem').value,
+                destino: document.getElementById('rotaDestino').value,
+                distancia: parseFloat(document.getElementById('rotaDistancia').value),
+                tempoEstimado: parseInt(document.getElementById('rotaTempo').value),
+                pontosParada: document.getElementById('rotaPontos').value
+            };
+            
+            if (id) {
+                const index = DB.rotas.findIndex(r => r.id === id);
+                DB.rotas[index] = { ...DB.rotas[index], ...dados };
+            } else {
+                DB.rotas.push({ ...dados, id: nextId.rota++ });
+            }
+            
+            fecharModal();
+            listarRotas();
+        }
+
+        function verRota(id) {
+            const rota = DB.rotas.find(r => r.id === id);
+            if (!rota) return;
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-map-marked-alt"></i> ${rota.codigo} - ${rota.nome}</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div>
+                    <div class="info-box">
+                        <p><i class="fas fa-location-arrow"></i> <strong>Origem:</strong> ${rota.origem}</p>
+                        <p><i class="fas fa-flag-checkered"></i> <strong>Destino:</strong> ${rota.destino}</p>
+                        <p><i class="fas fa-ruler"></i> <strong>Distância:</strong> ${rota.distancia} km</p>
+                        <p><i class="fas fa-clock"></i> <strong>Tempo Estimado:</strong> ${rota.tempoEstimado} minutos</p>
+                    </div>
+                    <h4 style="color:#8B4513;margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> Pontos de Parada:</h4>
+                    ${rota.pontosParada ? rota.pontosParada.split(',').map(p => `
+                        <div style="padding:10px;background:#fffdf5;margin:5px 0;border-radius:5px;display:flex;align-items:center;gap:10px;">
+                            <i class="fas fa-bus" style="color:#FFD700;"></i> ${p.trim()}
+                        </div>
+                    `).join('') : '<p>Nenhum ponto cadastrado</p>'}
+                </div>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function editarRota(id) { abrirFormRota(id); }
+
+        function excluirRota(id) {
+            if (confirm('Tem certeza que deseja excluir esta rota?')) {
+                DB.rotas = DB.rotas.filter(r => r.id !== id);
+                listarRotas();
+            }
+        }
+
+        // ============ VIAGENS ============
+        function listarViagens() {
+            const tbody = document.getElementById('viagensTableBody');
+            if (DB.viagens.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="fas fa-calendar-check"></i><p>Nenhuma viagem cadastrada</p></div></td></tr>';
+                return;
+            }
+            tbody.innerHTML = DB.viagens.map(v => {
+                const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                const rota = DB.rotas.find(r => r.id === v.rotaId);
+                
+                return `
+                    <tr>
+                        <td><strong><i class="far fa-calendar-alt"></i> ${formatarData(v.data)}</strong></td>
+                        <td><i class="fas fa-sign-out-alt"></i> ${v.horarioSaida}</td>
+                        <td><i class="fas fa-sign-in-alt"></i> ${v.horarioChegada}</td>
+                        <td>${motorista ? motorista.nome : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${onibus ? onibus.placa : '<span style="color:#999;">N/A</span>'}</td>
+                        <td>${rota ? rota.codigo : '<span style="color:#999;">N/A</span>'}</td>
+                        <td><span class="badge badge-${v.status === 'programada' ? 'info' : v.status === 'em_andamento' ? 'warning' : v.status === 'concluida' ? 'success' : 'danger'}"><i class="fas fa-circle"></i> ${v.status}</span></td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="btn btn-warning btn-sm" onclick="editarViagem(${v.id})" title="Editar"><i class="fas fa-edit"></i></button>
+                                <button class="btn btn-danger btn-sm" onclick="excluirViagem(${v.id})" title="Excluir"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function abrirFormViagem(id = null) {
+            const viagem = id ? DB.viagens.find(v => v.id === id) : null;
+            const motoristasAtivos = DB.motoristas.filter(m => m.status === 'ativo');
+            const onibusDisponiveis = DB.onibus.filter(o => o.status === 'disponivel' || (viagem && o.id === viagem.onibusId));
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-calendar-plus"></i> ${viagem ? 'Editar' : 'Nova'} Viagem</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <form onsubmit="salvarViagem(event, ${id})">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="far fa-calendar-alt"></i> Data *</label>
+                            <input type="date" class="form-control" id="viagemData" value="${viagem ? viagem.data : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-out-alt"></i> Horário Saída *</label>
+                            <input type="time" class="form-control" id="viagemSaida" value="${viagem ? viagem.horarioSaida : ''}" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-sign-in-alt"></i> Horário Chegada *</label>
+                            <input type="time" class="form-control" id="viagemChegada" value="${viagem ? viagem.horarioChegada : ''}" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-user-tie"></i> Motorista *</label>
+                            <select class="form-control" id="viagemMotorista" required>
+                                <option value="">Selecione um motorista</option>
+                                ${motoristasAtivos.map(m => `<option value="${m.id}" ${viagem && viagem.motoristaId === m.id ? 'selected' : ''}>${m.nome} - Cat. ${m.categoria}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><i class="fas fa-bus"></i> Ônibus *</label>
+                            <select class="form-control" id="viagemOnibus" required>
+                                <option value="">Selecione um ônibus</option>
+                                ${onibusDisponiveis.map(o => `<option value="${o.id}" ${viagem && viagem.onibusId === o.id ? 'selected' : ''}>${o.placa} - ${o.modelo}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map"></i> Rota *</label>
+                            <select class="form-control" id="viagemRota" required>
+                                <option value="">Selecione uma rota</option>
+                                ${DB.rotas.map(r => `<option value="${r.id}" ${viagem && viagem.rotaId === r.id ? 'selected' : ''}>${r.codigo} - ${r.nome}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    ${id ? `
+                        <div class="form-group">
+                            <label><i class="fas fa-circle"></i> Status</label>
+                            <select class="form-control" id="viagemStatus">
+                                <option value="programada" ${viagem.status === 'programada' ? 'selected' : ''}>📋 Programada</option>
+                                <option value="em_andamento" ${viagem.status === 'em_andamento' ? 'selected' : ''}>🚌 Em Andamento</option>
+                                <option value="concluida" ${viagem.status === 'concluida' ? 'selected' : ''}>✅ Concluída</option>
+                                <option value="cancelada" ${viagem.status === 'cancelada' ? 'selected' : ''}>❌ Cancelada</option>
+                            </select>
+                        </div>
+                    ` : ''}
+                    <div class="form-group">
+                        <label><i class="fas fa-sticky-note"></i> Observações</label>
+                        <textarea class="form-control" id="viagemObs" rows="3" placeholder="Observações adicionais...">${viagem ? viagem.observacoes : ''}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-save"></i> Salvar Viagem
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarViagem(event, id) {
+            event.preventDefault();
+            
+            const motoristaId = parseInt(document.getElementById('viagemMotorista').value);
+            const onibusId = parseInt(document.getElementById('viagemOnibus').value);
+            const rotaId = parseInt(document.getElementById('viagemRota').value);
+            
+            if (!motoristaId || !onibusId || !rotaId) {
+                alert('Por favor, preencha todos os campos obrigatórios!');
+                return;
+            }
+            
+            const dados = {
+                motoristaId: motoristaId,
+                onibusId: onibusId,
+                rotaId: rotaId,
+                data: document.getElementById('viagemData').value,
+                horarioSaida: document.getElementById('viagemSaida').value,
+                horarioChegada: document.getElementById('viagemChegada').value,
+                observacoes: document.getElementById('viagemObs').value,
+                status: id ? document.getElementById('viagemStatus').value : 'programada'
+            };
+            
+            if (id) {
+                const index = DB.viagens.findIndex(v => v.id === id);
+                DB.viagens[index] = { ...DB.viagens[index], ...dados };
+            } else {
+                DB.viagens.push({ ...dados, id: nextId.viagem++ });
+                
+                const onibus = DB.onibus.find(o => o.id === dados.onibusId);
+                if (onibus && onibus.status === 'disponivel') {
+                    onibus.status = 'em_rota';
+                }
+            }
+            
+            fecharModal();
+            listarViagens();
+        }
+
+        function editarViagem(id) { abrirFormViagem(id); }
+
+        function excluirViagem(id) {
+            if (confirm('Tem certeza que deseja excluir esta viagem?')) {
+                DB.viagens = DB.viagens.filter(v => v.id !== id);
+                listarViagens();
+            }
+        }
+
+        // ============ TROCAS ============
+        function carregarTrocas() {
+            mostrarTabTrocas('ativas', document.querySelector('#trocas-page .tab.active'));
+        }
+
+        function mostrarTabTrocas(tab, element) {
+            document.querySelectorAll('#trocas-page .tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            
+            const content = document.getElementById('trocasContent');
+            
+            if (tab === 'ativas') {
+                const viagensAtivas = DB.viagens.filter(v => v.status === 'programada' || v.status === 'em_andamento');
+                
+                content.innerHTML = `
+                    <div class="card-grid" style="margin-top:20px;">
+                        ${viagensAtivas.length === 0 
+                            ? '<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-bus"></i><p>Nenhuma viagem ativa no momento</p></div>'
+                            : viagensAtivas.map(v => {
+                                const motorista = DB.motoristas.find(m => m.id === v.motoristaId);
+                                const rota = DB.rotas.find(r => r.id === v.rotaId);
+                                const onibus = DB.onibus.find(o => o.id === v.onibusId);
+                                return `
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <span><i class="fas fa-road"></i> Viagem #${v.id}</span>
+                                            <span class="badge badge-${v.status === 'programada' ? 'info' : 'warning'}"><i class="fas fa-circle"></i> ${v.status}</span>
+                                        </div>
+                                        <div class="item-list" style="border:none;">
+                                            <p><i class="far fa-calendar-alt"></i> <strong>Data:</strong> ${formatarData(v.data)}</p>
+                                            <p><i class="fas fa-clock"></i> <strong>Saída:</strong> ${v.horarioSaida} | <strong>Chegada:</strong> ${v.horarioChegada}</p>
+                                            <p><i class="fas fa-user"></i> <strong>Motorista:</strong> ${motorista ? motorista.nome : 'N/A'}</p>
+                                            <p><i class="fas fa-bus"></i> <strong>Ônibus:</strong> ${onibus ? onibus.placa : 'N/A'}</p>
+                                            <p><i class="fas fa-map"></i> <strong>Rota:</strong> ${rota ? rota.nome : 'N/A'}</p>
+                                        </div>
+                                        <button class="btn btn-warning" onclick="abrirTroca(${v.id})" style="width:100%;margin-top:15px;">
+                                            <i class="fas fa-exchange-alt"></i> Trocar Motorista
+                                        </button>
+                                    </div>
+                                `;
+                            }).join('')
+                        }
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="table-container" style="margin-top:20px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th><i class="far fa-calendar-alt"></i> Data/Hora</th>
+                                    <th><i class="fas fa-user"></i> Motorista Anterior</th>
+                                    <th><i class="fas fa-user-check"></i> Novo Motorista</th>
+                                    <th><i class="fas fa-info-circle"></i> Motivo</th>
+                                    <th><i class="fas fa-circle"></i> Status</th>
+                                    <th><i class="fas fa-cogs"></i> Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${DB.trocas.length === 0 
+                                    ? '<tr><td colspan="6"><div class="empty-state"><i class="fas fa-exchange-alt"></i><p>Nenhuma troca registrada</p></div></td></tr>'
+                                    : DB.trocas.map(t => `
+                                        <tr>
+                                            <td><strong>${formatarData(t.data)}</strong> ${t.hora}</td>
+                                            <td>${getMotoristaNome(t.motoristaAnterior)}</td>
+                                            <td>${getMotoristaNome(t.motoristaNovo)}</td>
+                                            <td>${t.motivo}</td>
+                                            <td><span class="badge badge-${t.status === 'aprovada' ? 'success' : t.status === 'pendente' ? 'warning' : 'danger'}"><i class="fas fa-circle"></i> ${t.status}</span></td>
+                                            <td>
+                                                ${t.status === 'pendente' ? `
+                                                    <div class="actions-cell">
+                                                        <button class="btn btn-success btn-sm" onclick="aprovarTroca(${t.id})" title="Aprovar"><i class="fas fa-check"></i></button>
+                                                        <button class="btn btn-danger btn-sm" onclick="rejeitarTroca(${t.id})" title="Rejeitar"><i class="fas fa-times"></i></button>
+                                                    </div>
+                                                ` : '<span style="color:#999;">-</span>'}
+                                            </td>
+                                        </tr>
+                                    `).join('')
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+        }
+
+        function abrirTroca(viagemId) {
+            const viagem = DB.viagens.find(v => v.id === viagemId);
+            if (!viagem) return;
+            
+            const motoristaAtual = DB.motoristas.find(m => m.id === viagem.motoristaId);
+            const motoristasDisponiveis = DB.motoristas.filter(m => m.status === 'ativo' && m.id !== viagem.motoristaId);
+            
+            if (motoristasDisponiveis.length === 0) {
+                alert('Não há motoristas disponíveis para troca no momento!');
+                return;
+            }
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="modal-header">
+                    <h2><i class="fas fa-exchange-alt"></i> Trocar Motorista - Viagem #${viagem.id}</h2>
+                    <button class="modal-close" onclick="fecharModal()"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="info-box">
+                    <p><i class="fas fa-user"></i> <strong>Motorista Atual:</strong> ${motoristaAtual ? motoristaAtual.nome : 'N/A'}</p>
+                    <p><i class="far fa-calendar-alt"></i> <strong>Data:</strong> ${formatarData(viagem.data)}</p>
+                    <p><i class="fas fa-clock"></i> <strong>Horário:</strong> ${viagem.horarioSaida} → ${viagem.horarioChegada}</p>
+                </div>
+                <form onsubmit="salvarTroca(event, ${viagemId})">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-check"></i> Novo Motorista *</label>
+                        <select class="form-control" id="trocaNovoMotorista" required>
+                            <option value="">Selecione um motorista disponível</option>
+                            ${motoristasDisponiveis.map(m => `<option value="${m.id}">${m.nome} - Categoria ${m.categoria}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-info-circle"></i> Motivo da Troca *</label>
+                        <textarea class="form-control" id="trocaMotivo" required rows="3" placeholder="Descreva o motivo da substituição..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-warning" style="width:100%;margin-top:10px;">
+                        <i class="fas fa-exchange-alt"></i> Confirmar Troca de Motorista
+                    </button>
+                </form>
+            `;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function salvarTroca(event, viagemId) {
+            event.preventDefault();
+            
+            const viagem = DB.viagens.find(v => v.id === viagemId);
+            const novoMotoristaId = parseInt(document.getElementById('trocaNovoMotorista').value);
+            const motivo = document.getElementById('trocaMotivo').value;
+            
+            const troca = {
+                id: nextId.troca++,
+                viagemId: viagemId,
+                motoristaAnterior: viagem.motoristaId,
+                motoristaNovo: novoMotoristaId,
+                data: new Date().toISOString().split('T')[0],
+                hora: new Date().toLocaleTimeString(),
+                motivo: motivo,
+                status: 'pendente'
+            };
+            
+            DB.trocas.unshift(troca);
+            viagem.motoristaId = novoMotoristaId;
+            viagem.observacoes += `\n🔄 Troca de motorista: ${motivo}`;
+            
+            fecharModal();
+            carregarTrocas();
+            atualizarBadges();
+            alert('✅ Troca registrada com sucesso! Aguardando aprovação.');
+        }
+
+        function aprovarTroca(id) {
+            const troca = DB.trocas.find(t => t.id === id);
+            if (troca) {
+                troca.status = 'aprovada';
+                carregarTrocas();
+                atualizarBadges();
+            }
+        }
+
+        function rejeitarTroca(id) {
+            const troca = DB.trocas.find(t => t.id === id);
+            if (troca) {
+                troca.status = 'rejeitada';
+                
+                const viagem = DB.viagens.find(v => v.id === troca.viagemId);
+                if (viagem) {
+                    viagem.motoristaId = troca.motoristaAnterior;
+                }
+                
+                carregarTrocas();
+                atualizarBadges();
+            }
+        }
+
+        // ============ FUNÇÕES AUXILIARES ============
+        function getMotoristaNome(id) {
+            const motorista = DB.motoristas.find(m => m.id === id);
+            return motorista ? motorista.nome : 'Desconhecido';
+        }
+
+        function formatarData(data) {
+            if (!data) return '';
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('modal')) {
+                fecharModal();
+            }
+        }
+
+        // ============ INICIALIZAÇÃO ============
+        carregarDashboard();
+    </script>
+</body>
+</html>
